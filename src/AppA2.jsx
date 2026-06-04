@@ -239,7 +239,7 @@ const SECCIONES_ADMIN=["Planner","Productos","Trafficker","Creativos","Tiendas",
 
 const bLA=(p,ang)=>`Eres un experto en diseño de landing pages para ecommerce COD en LATAM, especializado en productos de compra por impulso vendidos a través de Meta Ads.\n\nVoy a darte todo lo que necesitas sobre el producto antes de que empieces a trabajar. No generes nada todavía — solo confirma que entendiste y espera mi instrucción.\n\n--- PRODUCTO ---\nNombre comercial (si ya lo tienes): ${p.nombre||"sin definir aún"}\nDescripción: ${p.descripcion||"[qué es, para qué sirve, qué problema resuelve]"}\nPrecio antes: ${p.precioAntes||"[$ precio tachado]"}\nPrecio ahora: ${p.precioAhora||"[$ precio actual]"}\n\n--- AUDIENCIA ---\nPúblico objetivo: ${p.buyerPersona||"[ej: mujeres 30-55 / sin definir, en testeo]"}\nÁngulo de venta principal: ${p.anguloPpal||ang?.split("\n")[0]||"[ej: comodidad / ahorro / status / sin definir aún]"}\nPaís(es) de venta: ${p.pais||"Colombia"}\n\n--- ESTILO VISUAL ---\nColores: ${p.paleta||'[color fondo / color marca / color botón CTA — o sin definir]'}\nTono de comunicación: directo, confiable, sin exageración ni lenguaje de mercado\nReferencia de estilo: páginas limpias, profesionales, sin saturación visual\n\n--- REGLAS QUE SIEMPRE APLICAN ---\n- Máximo 3 colores en toda la landing\n- Sin párrafos largos ni bloques de texto denso\n- Sin íconos decorativos innecesarios\n- Sin fondos degradados recargados\n- Los botones de compra se configuran en la plataforma — no los incluyas en los diseños\n- Trabajaremos bloque por bloque — espera mi aprobación antes de continuar al siguiente\n\n¿Entendido? Confirma y espera.`;
 
-export default function AppA2(){
+export default function App(){
   const[screen,setScreen]=useState("loading");
   const[isReg,setIsReg]=useState(false);
   const[uname,setUname]=useState("");
@@ -417,6 +417,13 @@ export default function AppA2(){
   const fn=user&&user.nc?user.nc:(user&&user.name?user.name:"");
   const firstName=fn.split(" ")[0]||fn;
 
+    if(embeddedUser&&screen==="loading"){
+    setTimeout(()=>{
+      setUser(embeddedUser);
+      if(embeddedModulo)setModulo(embeddedModulo);
+      setScreen("app");
+    },0);
+  }
   if(screen==="loading")return(<div style={{background:P.bg,minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:20}}><style>{CSS}</style><div style={{fontFamily:"'Poppins',sans-serif",fontSize:32,fontWeight:800,lineHeight:1}}><GT>BITACORA PRO</GT></div><div style={{fontSize:9,color:P.mt2,letterSpacing:4,textTransform:"uppercase",marginTop:6,fontWeight:300}}>by Estefani Horta</div><div style={{display:"flex",gap:6,marginTop:12}}>{[0,1,2].map(i=><div key={i} style={{width:6,height:6,borderRadius:"50%",background:P.gold,animation:"pulse 1.4s ease-in-out "+(i*0.2)+"s infinite"}}/>)}</div></div>);
 
   if(screen==="auth")return(
