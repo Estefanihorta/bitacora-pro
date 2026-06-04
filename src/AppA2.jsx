@@ -46,7 +46,7 @@ const GT=({children,style={}})=>(<span style={{background:"linear-gradient(135de
 const SH=({label,sub=""})=>(<div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}><div style={{width:3,height:14,background:"linear-gradient(180deg,#C9956C,#8B5E3C)",borderRadius:2}}/><span style={{fontSize:10,color:"#C9956C",letterSpacing:1.5,textTransform:"uppercase",fontWeight:600}}>{label}</span>{sub&&<span style={{fontSize:10,color:P.mt,marginLeft:4}}>{sub}</span>}</div>);
 const MCard=({label,value,sub,color=P.gold,icon=""})=>(<div style={{background:P.card,border:"1px solid "+P.border,borderRadius:12,padding:"14px 16px"}}><div style={{fontSize:9,color:P.mt,letterSpacing:1.5,textTransform:"uppercase",fontWeight:600,marginBottom:6,display:"flex",alignItems:"center",gap:6}}>{icon&&<span>{icon}</span>}{label}</div><div style={{fontFamily:"'Poppins',sans-serif",fontSize:20,fontWeight:800,color,lineHeight:1}}>{value}</div>{sub&&<div style={{fontSize:10,color:P.mt,marginTop:4}}>{sub}</div>}</div>);
 
-const CopyBtn=({text,small=false})=>{const[ok,setOk]=useState(false);return(<button style={{...SG({padding:small?"4px 12px":"7px 16px",fontSize:small?10:11}),background:ok?"#0a1a0a":"transparent",borderColor:ok?"#4dba7f44":"#C9956C44",color:ok?P.green:P.gold}} onClick={()=>{navigator.clipboard?.writeText(text);setOk(true);setTimeout(()=>setOk(false),2000);}}>{ok?"✓ Copiado":"📋 Copiar"}</button>);};
+const CopyBtn=({text,small=false})=>{const[ok,setOk]=useState(false);return(<button style={{...SG({padding:small?"4px 12px":"7px 16px",fontSize:small?10:11}),background:ok?"#0a1a0a":"transparent",borderColor:ok?"#4dba7f44":"#C9956C44",color:ok?P.green:P.gold}} onClick={()=>{navigator.(clipboard&&clipboard.writeText)(text);setOk(true);setTimeout(()=>setOk(false),2000);}}>{ok?"✓ Copiado":"📋 Copiar"}</button>);};
 const Acc=({num,label,tag,color=P.gold,note="",children,defaultOpen=false})=>{const[open,setOpen]=useState(defaultOpen);return(<div style={{background:P.card,border:open ? "1px solid "+color+"55" : "1px solid "+P.border,borderRadius:12,overflow:"hidden",marginBottom:10,transition:"border-color .2s"}}><button onClick={()=>setOpen(!open)} style={{width:"100%",background:"none",border:"none",display:"flex",alignItems:"center",gap:10,padding:"13px 16px",cursor:"pointer",textAlign:"left"}}><div style={{width:28,height:28,borderRadius:8,background:color+"22",border:"1px solid "+color+"44",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{fontSize:10,color,fontWeight:800,letterSpacing:-.5}}>{num}</span></div><div style={{flex:1}}><div style={{fontSize:9,color,letterSpacing:1.5,textTransform:"uppercase",fontWeight:600,marginBottom:2}}>{tag}</div><div style={{fontSize:13,color:P.tx,fontWeight:600}}>{label}</div></div><span style={{color:P.mt,fontSize:14,transition:"transform .25s",display:"inline-block",transform:open?"rotate(180deg)":"rotate(0)"}}>▾</span></button>{open&&(<div className="acc" style={{borderTop:"1px solid "+P.border,padding:"14px 16px 16px"}}>{note&&<div style={{background:color+"11",border:"1px solid "+color+"22",borderRadius:8,padding:"8px 12px",fontSize:11,color,marginBottom:12,lineHeight:1.6}}>{note}</div>}{children}</div>)}</div>);};
 const PromptBox=({text})=>(<div><div style={{background:P.bg,border:"1px solid "+P.border,borderRadius:8,padding:"12px 14px",fontSize:11.5,color:P.mt,lineHeight:1.9,whiteSpace:"pre-wrap",maxHeight:280,overflowY:"auto",marginBottom:10,fontFamily:"monospace"}}>{text}</div><div style={{display:"flex",justifyContent:"flex-end"}}><CopyBtn text={text}/></div></div>);
 
@@ -239,7 +239,7 @@ const SECCIONES_ADMIN=["Planner","Productos","Trafficker","Creativos","Tiendas",
 
 const bLA=(p,ang)=>`Eres un experto en diseño de landing pages para ecommerce COD en LATAM, especializado en productos de compra por impulso vendidos a través de Meta Ads.\n\nVoy a darte todo lo que necesitas sobre el producto antes de que empieces a trabajar. No generes nada todavía — solo confirma que entendiste y espera mi instrucción.\n\n--- PRODUCTO ---\nNombre comercial (si ya lo tienes): ${p.nombre||"sin definir aún"}\nDescripción: ${p.descripcion||"[qué es, para qué sirve, qué problema resuelve]"}\nPrecio antes: ${p.precioAntes||"[$ precio tachado]"}\nPrecio ahora: ${p.precioAhora||"[$ precio actual]"}\n\n--- AUDIENCIA ---\nPúblico objetivo: ${p.buyerPersona||"[ej: mujeres 30-55 / sin definir, en testeo]"}\nÁngulo de venta principal: ${p.anguloPpal||ang?.split("\n")[0]||"[ej: comodidad / ahorro / status / sin definir aún]"}\nPaís(es) de venta: ${p.pais||"Colombia"}\n\n--- ESTILO VISUAL ---\nColores: ${p.paleta||'[color fondo / color marca / color botón CTA — o sin definir]'}\nTono de comunicación: directo, confiable, sin exageración ni lenguaje de mercado\nReferencia de estilo: páginas limpias, profesionales, sin saturación visual\n\n--- REGLAS QUE SIEMPRE APLICAN ---\n- Máximo 3 colores en toda la landing\n- Sin párrafos largos ni bloques de texto denso\n- Sin íconos decorativos innecesarios\n- Sin fondos degradados recargados\n- Los botones de compra se configuran en la plataforma — no los incluyas en los diseños\n- Trabajaremos bloque por bloque — espera mi aprobación antes de continuar al siguiente\n\n¿Entendido? Confirma y espera.`;
 
-export default function App(){
+export default function AppA2({embeddedUser=null,embeddedModulo=null,onLogout=null}){
   const[screen,setScreen]=useState("loading");
   const[isReg,setIsReg]=useState(false);
   const[uname,setUname]=useState("");
@@ -781,7 +781,7 @@ export default function App(){
                 <span style={{fontSize:10,color:P.mt2}}>ordenes_*.xlsx / ordenes_*.csv</span>
                 <input type="file" accept=".csv,.xlsx,.xls" style={{display:"none"}} onChange={e=>e.target.files[0]&&importDropi(e.target.files[0])}/>
               </label>
-              {dropiData?.archivo&&<div style={{marginTop:10,fontSize:11,color:P.green}}>✓ Último archivo: {dropiData.archivo} — importado el {dropiData.fechaImport}</div>}
+              {(dropiData&&dropiData.archivo)&&<div style={{marginTop:10,fontSize:11,color:P.green}}>✓ Último archivo: {dropiData.archivo} — importado el {dropiData.fechaImport}</div>}
             </div>
 
             {dropiData&&(
@@ -871,10 +871,10 @@ export default function App(){
                 <span style={{fontSize:10,color:P.mt2}}>Exportar desde Meta Ads Manager → Campañas</span>
                 <input type="file" accept=".csv,.xlsx,.xls" style={{display:"none"}} onChange={e=>e.target.files[0]&&importMeta(e.target.files[0])}/>
               </label>
-              {metaData?.archivo&&<div style={{marginTop:10,fontSize:11,color:P.green}}>✓ Último archivo: {metaData.archivo} — {metaData.totalRows} filas — importado el {metaData.fecha}</div>}
+              {(metaData&&metaData.archivo)&&<div style={{marginTop:10,fontSize:11,color:P.green}}>✓ Último archivo: {metaData.archivo} — {metaData.totalRows} filas — importado el {metaData.fecha}</div>}
             </div>
 
-            {metaData?.filas&&metaData.filas.length>0&&(
+            {(metaData&&metaData.filas)&&metaData.filas.length>0&&(
               <>
                 {/* KPIs Meta */}
                 {(()=>{
@@ -1146,7 +1146,7 @@ export default function App(){
           <div style={{fontFamily:"'Poppins',sans-serif",fontSize:isMob?15:20,fontWeight:800}}><GT>BITÁCORA PRO</GT></div>
           <span style={{color:P.mt2}}>|</span>
           <span style={{fontSize:11,color:P.mt}}>🌐 Panel Global</span>
-          <span style={{background:P.gold+"22",border:"1px solid "+P.gold+"44",borderRadius:12,padding:"1px 7px",fontSize:9,color:P.gold,letterSpacing:1,fontWeight:600}}>{user?.role==="admin"?"ADMIN":"USUARIO"}</span>
+          <span style={{background:P.gold+"22",border:"1px solid "+P.gold+"44",borderRadius:12,padding:"1px 7px",fontSize:9,color:P.gold,letterSpacing:1,fontWeight:600}}>{(user&&user.role)==="admin"?"ADMIN":"USUARIO"}</span>
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
           <button style={SB({padding:"7px 16px",fontSize:11})} onClick={()=>doSave()}>{saveMsg||"GUARDAR"}</button>
@@ -1213,10 +1213,10 @@ export default function App(){
               </div>
               <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
                 <SH label="Gastos Fijos del Mes"/>
-                {gastos.filter(g=>g.fecha?.startsWith(monthStr())).length===0?(
+                {gastos.filter(g=>g.(fecha&&fecha.startsWith)(monthStr())).length===0?(
                   <div style={{textAlign:"center",padding:"20px",color:P.mt,fontSize:12}}>Sin gastos registrados este mes</div>
                 ):(
-                  gastos.filter(g=>g.fecha?.startsWith(monthStr())).map(g=>(
+                  gastos.filter(g=>g.(fecha&&fecha.startsWith)(monthStr())).map(g=>(
                     <div key={g.id} style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:"1px solid "+P.border}}>
                       <span style={{fontSize:12,color:P.mt}}>{g.concepto}</span>
                       <span style={{fontSize:12,color:P.orange,fontWeight:600}}>{COP(+g.valor)}</span>
@@ -1421,7 +1421,7 @@ export default function App(){
         )}
 
         {/* ════ ADMIN ════ */}
-        {tab==="admin"&&user?.role==="admin"&&(
+        {tab==="admin"&&(user&&user.role)==="admin"&&(
           <div className="anim">
             <h2 style={{fontFamily:"'Poppins',sans-serif",fontSize:isMob?18:24,fontWeight:800,marginBottom:20}}><GT>Administrar Usuarios</GT></h2>
 
@@ -1460,13 +1460,13 @@ export default function App(){
                 {usuarios.map(u=>(
                   <div key={u.name} className="hr" style={{padding:"14px 18px",borderBottom:"1px solid "+P.border}}>
                     <div style={{display:"flex",alignItems:"center",gap:12,flexWrap:"wrap",marginBottom:8}}>
-                      <div style={{fontFamily:"'Poppins',sans-serif",fontSize:13,fontWeight:700,color:P.tx,flex:1}}>@{u.name}</div>
+                      <div style={{fontFamily:"'Poppins',sans-serif",fontSize:13,fontWeight:700,color:P.tx,flex:1}}>{"@"+(u.name||"")}</div>
                       <span style={{background:(u.role==="admin"?P.gold:P.blue)+"22",border:"1px solid "+(u.role==="admin"?P.gold:P.blue)+"44",borderRadius:12,padding:"2px 8px",fontSize:10,color:u.role==="admin"?P.gold:P.blue,fontWeight:600}}>{u.role}</span>
                       {/* Toggle activo */}
                       <div style={{display:"flex",alignItems:"center",gap:8}}>
                         <span style={{fontSize:10,color:P.mt}}>Cuenta</span>
                         <div onClick={()=>u.name!==user.name&&toggleUsuario(u.name,"active",!u.active)}
-                          style={{width:36,height:20,borderRadius:10,background:u.active!==false?P.green:"#252525",cursor:u.name===user.name?"default":"pointer",position:"relative",transition:"background .2s",flexShrink:0,border:"1px solid "+(u.active!==false?P.green+"88":"#333"),opacity:u.name===user.name?.5:1}}>
+                          style={{width:36,height:20,borderRadius:10,background:u.active!==false?P.green:"#252525",cursor:u.name===user.name?"default":"pointer",position:"relative",transition:"background .2s",flexShrink:0,border:"1px solid "+(u.active!==false?P.green+"88":"#333"),opacity:u.name===user.name?0.5:1}}>
                           <div style={{position:"absolute",top:2,left:u.active!==false?17:2,width:14,height:14,borderRadius:"50%",background:u.active!==false?"#080400":"#555",transition:"left .2s"}}/>
                         </div>
                         <span style={{fontSize:10,color:u.active!==false?P.green:P.red,fontWeight:600}}>{u.active!==false?"Activo":"Inactivo"}</span>
@@ -1478,7 +1478,7 @@ export default function App(){
                         <div style={{fontSize:9,color:P.mt,marginBottom:6,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>Secciones habilitadas</div>
                         <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
                           {SECCIONES_ADMIN.map(sec=>{
-                            const enabled=(u.secciones?.[sec])!==false;
+                            const enabled=(u.(secciones&&secciones[sec]))!==false;
                             return(
                               <button key={sec} onClick={()=>toggleSeccion(u.name,sec,!enabled)}
                                 style={{background:enabled?P.gold+"22":"transparent",border:"1px solid "+(enabled?P.gold+"44":P.border),borderRadius:20,color:enabled?P.gold:P.mt2,padding:"3px 10px",fontSize:9,fontWeight:600,fontFamily:"'Poppins',sans-serif",transition:"all .2s"}}>{sec}</button>
