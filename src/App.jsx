@@ -46,7 +46,7 @@ const GT=({children,style={}})=>(<span style={{background:"linear-gradient(135de
 const SH=({label,sub=""})=>(<div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}><div style={{width:3,height:14,background:"linear-gradient(180deg,#C9956C,#8B5E3C)",borderRadius:2}}/><span style={{fontSize:10,color:"#C9956C",letterSpacing:1.5,textTransform:"uppercase",fontWeight:600}}>{label}</span>{sub&&<span style={{fontSize:10,color:P.mt,marginLeft:4}}>{sub}</span>}</div>);
 const MCard=({label,value,sub,color=P.gold,icon=""})=>(<div style={{background:P.card,border:"1px solid "+P.border,borderRadius:12,padding:"14px 16px"}}><div style={{fontSize:9,color:P.mt,letterSpacing:1.5,textTransform:"uppercase",fontWeight:600,marginBottom:6,display:"flex",alignItems:"center",gap:6}}>{icon&&<span>{icon}</span>}{label}</div><div style={{fontFamily:"'Poppins',sans-serif",fontSize:20,fontWeight:800,color,lineHeight:1}}>{value}</div>{sub&&<div style={{fontSize:10,color:P.mt,marginTop:4}}>{sub}</div>}</div>);
 
-const CopyBtn=({text,small=false})=>{const[ok,setOk]=useState(false);return(<button style={{...SG({padding:small?"4px 12px":"7px 16px",fontSize:small?10:11}),background:ok?"#0a1a0a":"transparent",borderColor:ok?"#4dba7f44":"#C9956C44",color:ok?P.green:P.gold}} onClick={()=>{navigator.clipboard?.writeText(text);setOk(true);setTimeout(()=>setOk(false),2000);}}>{ok?"✓ Copiado":"📋 Copiar"}</button>);};
+const CopyBtn=({text,small=false})=>{const[ok,setOk]=useState(false);return(<button style={{...SG({padding:small?"4px 12px":"7px 16px",fontSize:small?10:11}),background:ok?"#0a1a0a":"transparent",borderColor:ok?"#4dba7f44":"#C9956C44",color:ok?P.green:P.gold}} onClick={()=>{navigator.(clipboard&&clipboard.writeText)(text);setOk(true);setTimeout(()=>setOk(false),2000);}}>{ok?"✓ Copiado":"📋 Copiar"}</button>);};
 const Acc=({num,label,tag,color=P.gold,note="",children,defaultOpen=false})=>{const[open,setOpen]=useState(defaultOpen);return(<div style={{background:P.card,border:open ? "1px solid "+color+"55" : "1px solid "+P.border,borderRadius:12,overflow:"hidden",marginBottom:10,transition:"border-color .2s"}}><button onClick={()=>setOpen(!open)} style={{width:"100%",background:"none",border:"none",display:"flex",alignItems:"center",gap:10,padding:"13px 16px",cursor:"pointer",textAlign:"left"}}><div style={{width:28,height:28,borderRadius:8,background:color+"22",border:"1px solid "+color+"44",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{fontSize:10,color,fontWeight:800,letterSpacing:-.5}}>{num}</span></div><div style={{flex:1}}><div style={{fontSize:9,color,letterSpacing:1.5,textTransform:"uppercase",fontWeight:600,marginBottom:2}}>{tag}</div><div style={{fontSize:13,color:P.tx,fontWeight:600}}>{label}</div></div><span style={{color:P.mt,fontSize:14,transition:"transform .25s",display:"inline-block",transform:open?"rotate(180deg)":"rotate(0)"}}>▾</span></button>{open&&(<div className="acc" style={{borderTop:"1px solid "+P.border,padding:"14px 16px 16px"}}>{note&&<div style={{background:color+"11",border:"1px solid "+color+"22",borderRadius:8,padding:"8px 12px",fontSize:11,color,marginBottom:12,lineHeight:1.6}}>{note}</div>}{children}</div>)}</div>);};
 const PromptBox=({text})=>(<div><div style={{background:P.bg,border:"1px solid "+P.border,borderRadius:8,padding:"12px 14px",fontSize:11.5,color:P.mt,lineHeight:1.9,whiteSpace:"pre-wrap",maxHeight:280,overflowY:"auto",marginBottom:10,fontFamily:"monospace"}}>{text}</div><div style={{display:"flex",justifyContent:"flex-end"}}><CopyBtn text={text}/></div></div>);
 
@@ -157,7 +157,7 @@ const scoreA=a=>{
   let p=0,m=0;
   if((+a.cantProv||1)>1)p++;m++;
   const cm={"1":2,"Entre 2 y 3":1,"Entre 4 y 6":0,"Más de 6":-1};
-  p+=Math.max(0,cm[a.cantComp]??0);m+=2;
+  p+=Math.max(0,cm[a.cantComp]||0);m+=2;
   if(a.catalogo==="Si")p++;m++;if(a.importar==="Si")p++;m++;
   if(a.ticket==="Bajo"){p+=2;m+=2;}else if(a.ticket==="Medio"){p++;m+=2;}else m+=2;
   if(a.necesidad==="Si"){p+=2;m+=2;}else m+=2;
@@ -537,7 +537,7 @@ export default function App(){
     {id:"herramientas",icon:"🔧",label:"Herramientas"},
     {id:"metricas",icon:"📈",label:"Métricas"},
     {id:"admin",icon:"⚙️",label:"Admin",adminOnly:true},
-  ].filter(t=>!t.adminOnly||user?.role==="admin");
+  ].filter(t=>!t.adminOnly||(user&&user.role)==="admin");
 
   // M2 Productos
   /* ── ALL HOOKS FIRST — never conditionally ── */
@@ -616,7 +616,7 @@ export default function App(){
     const sc=scoreA(prod.analisis||{});
     const si=scoreInfo(sc);
     const cp=calcP(prod.calculadora||{});
-    const devDone=DEV_STEPS.filter(s=>prod.desarrollo?.steps?.[s.key]?.done).length;
+    const devDone=DEV_STEPS.filter(s=>(prod.desarrollo&&prod.desarrollo.steps&&prod.desarrollo.steps[s.key]&&prod.desarrollo.steps[s.key].done)).length;
     const devPct=Math.round(devDone/DEV_STEPS.length*100);
     const etapaIdx=ETAPAS.findIndex(e=>e.id===prod.etapa);
 
@@ -670,13 +670,13 @@ export default function App(){
                   {[["¿Por qué lo venderías?","porQueVender"],["Descripción","descripcion"],["Buyer Persona","buyerPersona"]].map(([lbl,key])=>(
                     <div key={key} style={{marginBottom:12}}>
                       <div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>{lbl}</div>
-                      <textarea style={SI({height:70,resize:"vertical",lineHeight:1.6,fontSize:12})} value={prod.investigacion?.[key]||""} placeholder={lbl+"..."} onChange={e=>updEtapa(prod.id,"investigacion",{[key]:e.target.value})}/>
+                      <textarea style={SI({height:70,resize:"vertical",lineHeight:1.6,fontSize:12})} value={prod.(investigacion&&investigacion[key])||""} placeholder={lbl+"..."} onChange={e=>updEtapa(prod.id,"investigacion",{[key]:e.target.value})}/>
                     </div>
                   ))}
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
                     {[["Precio Proveedor","precioProveedor"],["Valor Venta Est.","valorVenta"],["Cant. Proveedores","cantProveedores"]].map(([lbl,key])=>(
                       <div key={key}><div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>{lbl}</div>
-                        <input style={SI({fontSize:12})} type="number" value={prod.investigacion?.[key]||""} onChange={e=>updEtapa(prod.id,"investigacion",{[key]:e.target.value})}/></div>
+                        <input style={SI({fontSize:12})} type="number" value={prod.(investigacion&&investigacion[key])||""} onChange={e=>updEtapa(prod.id,"investigacion",{[key]:e.target.value})}/></div>
                     ))}
                   </div>
                 </div>
@@ -688,15 +688,15 @@ export default function App(){
                     <div key={key} style={{marginBottom:10}}>
                       <div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>{lbl}</div>
                       <div style={{display:"flex",gap:6}}>
-                        <input style={SI({fontSize:12,flex:1})} value={prod.investigacion?.[key]||""} placeholder="https://..." onChange={e=>updEtapa(prod.id,"investigacion",{[key]:e.target.value})}/>
-                        {prod.investigacion?.[key]&&<a href={prod.investigacion[key]} target="_blank" rel="noreferrer" style={{...SG({padding:"0 10px",display:"flex",alignItems:"center",fontSize:14,textDecoration:"none"})}}>↗</a>}
+                        <input style={SI({fontSize:12,flex:1})} value={prod.(investigacion&&investigacion[key])||""} placeholder="https://..." onChange={e=>updEtapa(prod.id,"investigacion",{[key]:e.target.value})}/>
+                        {prod.(investigacion&&investigacion[key])&&<a href={prod.investigacion[key]} target="_blank" rel="noreferrer" style={{...SG({padding:"0 10px",display:"flex",alignItems:"center",fontSize:14,textDecoration:"none"})}}>↗</a>}
                       </div>
                     </div>
                   ))}
                 </div>
                 <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
                   <SH label="Notas"/>
-                  <textarea style={SI({height:100,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.investigacion?.notas||""} placeholder="Observaciones, ideas..." onChange={e=>updEtapa(prod.id,"investigacion",{notas:e.target.value})}/>
+                  <textarea style={SI({height:100,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.(investigacion&&investigacion.notas)||""} placeholder="Observaciones, ideas..." onChange={e=>updEtapa(prod.id,"investigacion",{notas:e.target.value})}/>
                 </div>
               </div>
             </div>
@@ -710,13 +710,13 @@ export default function App(){
                 {[["Cantidad Proveedores","cantProv",["1","2","3","4+"]],["Competidores","cantComp",["1","Entre 2 y 3","Entre 4 y 6","Más de 6"]],["Catálogo Público","catalogo",["Si","No"]],["Puede Importar","importar",["Si","No"]],["Ticket","ticket",["Bajo","Medio","Alto"]],["Suple Necesidad","necesidad",["Si","No"]],["Efecto Wow","wow",["Si","No"]],["Anuncio Cautivador","cautivador",["Si","No"]],["Percepción Valor","percepcion",["Si","No"]],["Es Black","black",["Si","No"]]].map(([lbl,key,opts])=>(
                   <div key={key} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 0",borderBottom:"1px solid "+P.border}}>
                     <span style={{fontSize:12,color:P.mt}}>{lbl}</span>
-                    <select style={SI({width:"auto",padding:"4px 8px",fontSize:12})} value={prod.analisis?.[key]||opts[0]} onChange={e=>updEtapa(prod.id,"analisis",{[key]:e.target.value})}>
+                    <select style={SI({width:"auto",padding:"4px 8px",fontSize:12})} value={prod.(analisis&&analisis[key])||opts[0]} onChange={e=>updEtapa(prod.id,"analisis",{[key]:e.target.value})}>
                       {opts.map(o=><option key={o}>{o}</option>)}
                     </select>
                   </div>
                 ))}
                 <div style={{marginTop:10}}><div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>Necesidad que suple</div>
-                  <input style={SI({fontSize:12})} value={prod.analisis?.queNec||""} placeholder="Describe..." onChange={e=>updEtapa(prod.id,"analisis",{queNec:e.target.value})}/></div>
+                  <input style={SI({fontSize:12})} value={prod.(analisis&&analisis.queNec)||""} placeholder="Describe..." onChange={e=>updEtapa(prod.id,"analisis",{queNec:e.target.value})}/></div>
               </div>
               <div style={{display:"flex",flexDirection:"column",gap:14}}>
                 <div style={{background:"#0a0900",border:"1px solid "+(si.color)+"44",borderRadius:14,padding:24,textAlign:"center"}}>
@@ -727,8 +727,8 @@ export default function App(){
                   <SH label="Prompt Análisis Profundo"/>
                   <div style={{fontSize:11,color:P.mt,marginBottom:10,lineHeight:1.6}}>Copia y pega en ChatGPT para análisis completo COD Colombia.</div>
                   <button style={SB({width:"100%",padding:"10px 0",fontSize:11})} onClick={()=>{
-                    const txt="ANÁLISIS ESTRATÉGICO — BITÁCORA PRO\nProducto: "+(prod.nombre)+"\nProblema: "+(prod.investigacion?.descripcion||"—")+"\nPor qué vender: "+(prod.investigacion?.porQueVender||"—")+"\nPrecio proveedor: "+(prod.investigacion?.precioProveedor||0)+"\nValor venta estimado: "+(prod.investigacion?.valorVenta||0)+"\nCant. proveedores: "+(prod.investigacion?.cantProveedores||1)+"\nCompetencia: "+(prod.analisis?.cantComp||"—")+"\nTicket: "+(prod.analisis?.ticket||"—")+"\nBuyer Persona: "+(prod.investigacion?.buyerPersona||"—")+"\nLinks competencia: "+(prod.investigacion?.linksComp||"—")+"\n\nEjecuta análisis completo COD Colombia Meta Ads con score de viabilidad, ángulos de venta, oferta recomendada, naming y recomendación final.";
-                    navigator.clipboard?.writeText(txt);setSaveMsg("✓ Copiado");setTimeout(()=>setSaveMsg(""),2000);
+                    const txt="ANÁLISIS ESTRATÉGICO — BITÁCORA PRO\nProducto: "+(prod.nombre)+"\nProblema: "+(prod.(investigacion&&investigacion.descripcion)||"—")+"\nPor qué vender: "+(prod.(investigacion&&investigacion.porQueVender)||"—")+"\nPrecio proveedor: "+(prod.(investigacion&&investigacion.precioProveedor)||0)+"\nValor venta estimado: "+(prod.(investigacion&&investigacion.valorVenta)||0)+"\nCant. proveedores: "+(prod.(investigacion&&investigacion.cantProveedores)||1)+"\nCompetencia: "+(prod.(analisis&&analisis.cantComp)||"—")+"\nTicket: "+(prod.(analisis&&analisis.ticket)||"—")+"\nBuyer Persona: "+(prod.(investigacion&&investigacion.buyerPersona)||"—")+"\nLinks competencia: "+(prod.(investigacion&&investigacion.linksComp)||"—")+"\n\nEjecuta análisis completo COD Colombia Meta Ads con score de viabilidad, ángulos de venta, oferta recomendada, naming y recomendación final.";
+                    navigator.(clipboard&&clipboard.writeText)(txt);setSaveMsg("✓ Copiado");setTimeout(()=>setSaveMsg(""),2000);
                   }}>📋 Copiar Prompt de Análisis</button>
                 </div>
                 <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
@@ -811,20 +811,20 @@ export default function App(){
                 {[["Precio 1 Unidad","precio1"],["Precio 2 Unidades","precio2"],["Precio 3 Unidades","precio3"],["Bundle","bundle"],["Garantía","garantia"],["Bonus Digital","bonus"],["Upsell","upsell"],["Urgencia","urgencia"]].map(([lbl,key])=>(
                   <div key={key} style={{marginBottom:10}}>
                     <div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>{lbl}</div>
-                    <input style={SI({fontSize:12})} value={prod.oferta?.[key]||""} placeholder={lbl+"..."} onChange={e=>updEtapa(prod.id,"oferta",{[key]:e.target.value})}/>
+                    <input style={SI({fontSize:12})} value={prod.(oferta&&oferta[key])||""} placeholder={lbl+"..."} onChange={e=>updEtapa(prod.id,"oferta",{[key]:e.target.value})}/>
                   </div>
                 ))}
               </div>
               <div style={{display:"flex",flexDirection:"column",gap:14}}>
                 <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
                   <SH label="Notas de Oferta"/>
-                  <textarea style={SI({height:180,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.oferta?.notas||""} placeholder="Estrategia, observaciones..." onChange={e=>updEtapa(prod.id,"oferta",{notas:e.target.value})}/>
+                  <textarea style={SI({height:180,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.(oferta&&oferta.notas)||""} placeholder="Estrategia, observaciones..." onChange={e=>updEtapa(prod.id,"oferta",{notas:e.target.value})}/>
                 </div>
                 <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
                   <SH label="Prompt Oferta COD"/>
                   <button style={SB({width:"100%",padding:"10px 0",fontSize:11})} onClick={()=>{
-                    const txt="OFERTA COD COLOMBIA — BITÁCORA PRO\nProducto: "+(prod.nombre)+"\nPrecio proveedor: "+(prod.investigacion?.precioProveedor||0)+"\nValor venta: "+(prod.investigacion?.valorVenta||0)+"\nMercado: Colombia COD Meta Ads\n\nGenera oferta completa: precios x1/x2/x3, bundle, garantía en días, bonus digital con título, upsell, urgencia real y justificación de cada elemento.";
-                    navigator.clipboard?.writeText(txt);setSaveMsg("✓ Copiado");setTimeout(()=>setSaveMsg(""),2000);
+                    const txt="OFERTA COD COLOMBIA — BITÁCORA PRO\nProducto: "+(prod.nombre)+"\nPrecio proveedor: "+(prod.(investigacion&&investigacion.precioProveedor)||0)+"\nValor venta: "+(prod.(investigacion&&investigacion.valorVenta)||0)+"\nMercado: Colombia COD Meta Ads\n\nGenera oferta completa: precios x1/x2/x3, bundle, garantía en días, bonus digital con título, upsell, urgencia real y justificación de cada elemento.";
+                    navigator.(clipboard&&clipboard.writeText)(txt);setSaveMsg("✓ Copiado");setTimeout(()=>setSaveMsg(""),2000);
                   }}>📋 Copiar Prompt Oferta</button>
                 </div>
               </div>
@@ -846,7 +846,7 @@ export default function App(){
               </div>
               <div style={{display:"flex",flexDirection:"column",gap:8}}>
                 {DEV_STEPS.map((s,i)=>{
-                  const step=prod.desarrollo?.steps?.[s.key]||{done:false,subs:{}};
+                  const step=(prod.desarrollo&&prod.desarrollo.steps&&prod.desarrollo.steps[s.key])||{done:false,subs:{}};
                   const subsDone=Object.values(step.subs||{}).filter(Boolean).length;
                   const subsTotal=(s.subs||[]).length;
                   const allDone=subsTotal>0&&subsDone===subsTotal;
@@ -880,12 +880,12 @@ export default function App(){
                       {stepOpen&&(
                         <div style={{borderTop:"1px solid "+P.border,padding:"10px 16px 14px",background:"#0a0a08"}}>
                           {(s.subs||[]).map(sub=>{
-                            const sd=step.subs?.[sub]||false;
+                            const sd=step.(subs&&subs[sub])||false;
                             return(
                               <div key={sub} onClick={()=>{
                                 setProductos(prev=>prev.map(p=>{
                                   if(p.id!==prod.id)return p;
-                                  const ns={...(p.desarrollo?.steps?.[s.key]?.subs||{}),[sub]:!sd};
+                                  const ns={...((p.desarrollo&&p.desarrollo.steps&&p.desarrollo.steps[s.key]&&p.desarrollo.steps[s.key].subs)||{}),[sub]:!sd};
                                   const ad=Object.values(ns).every(Boolean);
                                   return{...p,desarrollo:{...p.desarrollo,steps:{...p.desarrollo.steps,[s.key]:{...p.desarrollo.steps[s.key],done:ad,subs:ns}}}};
                                 }));
@@ -912,26 +912,26 @@ export default function App(){
               <div style={{display:"flex",flexDirection:"column",gap:14}}>
                 <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
                   <SH label="Ángulos de Venta"/>
-                  <textarea style={SI({height:120,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.creativos?.angulos||""} placeholder="1. Emocional — ...\n2. Testimonio — ...\n3. Comparación — ..." onChange={e=>updEtapa(prod.id,"creativos",{angulos:e.target.value})}/>
+                  <textarea style={SI({height:120,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.(creativos&&creativos.angulos)||""} placeholder="1. Emocional — ...\n2. Testimonio — ...\n3. Comparación — ..." onChange={e=>updEtapa(prod.id,"creativos",{angulos:e.target.value})}/>
                 </div>
                 <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
                   <SH label="Guión / Script"/>
-                  <textarea style={SI({height:200,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.creativos?.guion||""} placeholder="Pega aquí el guión generado en ChatGPT..." onChange={e=>updEtapa(prod.id,"creativos",{guion:e.target.value})}/>
+                  <textarea style={SI({height:200,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.(creativos&&creativos.guion)||""} placeholder="Pega aquí el guión generado en ChatGPT..." onChange={e=>updEtapa(prod.id,"creativos",{guion:e.target.value})}/>
                 </div>
               </div>
               <div style={{display:"flex",flexDirection:"column",gap:14}}>
                 <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
                   <SH label="Prompts de Imagen/Video"/>
-                  <textarea style={SI({height:150,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.creativos?.prompts||""} placeholder="Pega aquí los prompts generados..." onChange={e=>updEtapa(prod.id,"creativos",{prompts:e.target.value})}/>
+                  <textarea style={SI({height:150,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.(creativos&&creativos.prompts)||""} placeholder="Pega aquí los prompts generados..." onChange={e=>updEtapa(prod.id,"creativos",{prompts:e.target.value})}/>
                 </div>
                 <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
                   <SH label="Prompt Creativos"/>
                   <button style={SB({width:"100%",padding:"10px 0",fontSize:11,marginBottom:10})} onClick={()=>{
-                    const txt="CREATIVOS — BITÁCORA PRO\nProducto: "+(prod.nombre)+"\nDescripción: "+(prod.investigacion?.descripcion||"—")+"\nBuyer Persona: "+(prod.investigacion?.buyerPersona||"—")+"\nÁngulos: "+(prod.creativos?.angulos||"Beneficio, Testimonio, Emocional, Comparación, Validación")+"\nPrecio: "+(COP(+prod.investigacion?.valorVenta||0))+"\nMercado: Colombia COD Meta Ads\n\nPor cada ángulo: 5 hooks agresivos que toquen el punto de dolor. Luego por ángulo elegido: guión completo UGC + voz en off con fases (Scrollstopper 2-3s, Presentación 2-3s, Características 6-8s, Modo de uso 10-12s, CTA 2-4s) + texto de pantalla complementario (NO repite voz en off) + escenas sugeridas cinematográficas + tags ElevenLabs v3.";
-                    navigator.clipboard?.writeText(txt);setSaveMsg("✓ Copiado");setTimeout(()=>setSaveMsg(""),2000);
+                    const txt="CREATIVOS — BITÁCORA PRO\nProducto: "+(prod.nombre)+"\nDescripción: "+(prod.(investigacion&&investigacion.descripcion)||"—")+"\nBuyer Persona: "+(prod.(investigacion&&investigacion.buyerPersona)||"—")+"\nÁngulos: "+(prod.(creativos&&creativos.angulos)||"Beneficio, Testimonio, Emocional, Comparación, Validación")+"\nPrecio: "+(COP(+prod.(investigacion&&investigacion.valorVenta)||0))+"\nMercado: Colombia COD Meta Ads\n\nPor cada ángulo: 5 hooks agresivos que toquen el punto de dolor. Luego por ángulo elegido: guión completo UGC + voz en off con fases (Scrollstopper 2-3s, Presentación 2-3s, Características 6-8s, Modo de uso 10-12s, CTA 2-4s) + texto de pantalla complementario (NO repite voz en off) + escenas sugeridas cinematográficas + tags ElevenLabs v3.";
+                    navigator.(clipboard&&clipboard.writeText)(txt);setSaveMsg("✓ Copiado");setTimeout(()=>setSaveMsg(""),2000);
                   }}>📋 Copiar Prompt Creativos</button>
                   <SH label="Notas"/>
-                  <textarea style={SI({height:80,resize:"vertical",lineHeight:1.6,fontSize:12})} value={prod.creativos?.notas||""} placeholder="Notas adicionales..." onChange={e=>updEtapa(prod.id,"creativos",{notas:e.target.value})}/>
+                  <textarea style={SI({height:80,resize:"vertical",lineHeight:1.6,fontSize:12})} value={prod.(creativos&&creativos.notas)||""} placeholder="Notas adicionales..." onChange={e=>updEtapa(prod.id,"creativos",{notas:e.target.value})}/>
                 </div>
               </div>
             </div>
@@ -939,14 +939,14 @@ export default function App(){
 
           {/* CAMPAÑA */}
           {prod.etapa==="campana"&&(()=>{
-            const inv=+prod.campana?.inversion||0,ing=+prod.campana?.ingresos||0;
-            const costoDropi=+prod.campana?.costoDropi||0;
+            const inv=+prod.(campana&&campana.inversion)||0,ing=+prod.(campana&&campana.ingresos)||0;
+            const costoDropi=+prod.(campana&&campana.costoDropi)||0;
             const profit=ing-inv-costoDropi;
             const roas=inv>0?ing/inv:0;
             const alertas=[];
-            if((+prod.campana?.cpa||0)>50000)alertas.push({t:"CPA Alto — revisar segmentación",c:P.red});
-            if((+prod.campana?.cpm||0)>30000)alertas.push({t:"CPM Alto — revisar creativos",c:P.red});
-            if((+prod.campana?.ctr||0)<1&&(+prod.campana?.ctr||0)>0)alertas.push({t:"CTR Bajo — cambiar hook",c:"#f97316"});
+            if((+prod.(campana&&campana.cpa)||0)>50000)alertas.push({t:"CPA Alto — revisar segmentación",c:P.red});
+            if((+prod.(campana&&campana.cpm)||0)>30000)alertas.push({t:"CPM Alto — revisar creativos",c:P.red});
+            if((+prod.(campana&&campana.ctr)||0)<1&&(+prod.(campana&&campana.ctr)||0)>0)alertas.push({t:"CTR Bajo — cambiar hook",c:"#f97316"});
             return(
               <div style={{display:"grid",gridTemplateColumns:isMob?"1fr":"1fr 1fr",gap:14}}>
                 <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
@@ -954,12 +954,12 @@ export default function App(){
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
                     {[["Fecha","fecha","date"],["Inversión Ads","inversion","number"],["Ingresos Dropi","ingresos","number"],["Costo Dropi (opcional)","costoDropi","number"],["Ventas","ventas","number"],["CPA","cpa","number"],["CTR %","ctr","number"],["CPM","cpm","number"]].map(([lbl,key,type])=>(
                       <div key={key}><div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>{lbl}</div>
-                        <input style={SI({fontSize:12})} type={type} value={prod.campana?.[key]||""} onChange={e=>updEtapa(prod.id,"campana",{[key]:e.target.value})}/></div>
+                        <input style={SI({fontSize:12})} type={type} value={prod.(campana&&campana[key])||""} onChange={e=>updEtapa(prod.id,"campana",{[key]:e.target.value})}/></div>
                     ))}
                   </div>
                   <div style={{marginTop:10}}>
                     <div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>Estado</div>
-                    <select style={SI({fontSize:12,color:EST_COL[prod.campana?.estado]||P.gold})} value={prod.campana?.estado||"Testeando"} onChange={e=>updEtapa(prod.id,"campana",{estado:e.target.value})}>
+                    <select style={SI({fontSize:12,color:EST_COL[prod.(campana&&campana.estado)]||P.gold})} value={prod.(campana&&campana.estado)||"Testeando"} onChange={e=>updEtapa(prod.id,"campana",{estado:e.target.value})}>
                       {["Testeando","Activa","Escalando","Pausada","Finalizada"].map(s=><option key={s}>{s}</option>)}
                     </select>
                   </div>
@@ -985,7 +985,7 @@ export default function App(){
                   )}
                   <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
                     <SH label="Notas de Campaña"/>
-                    <textarea style={SI({height:120,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.campana?.notas||""} placeholder="Aprendizajes, próximos pasos..." onChange={e=>updEtapa(prod.id,"campana",{notas:e.target.value})}/>
+                    <textarea style={SI({height:120,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.(campana&&campana.notas)||""} placeholder="Aprendizajes, próximos pasos..." onChange={e=>updEtapa(prod.id,"campana",{notas:e.target.value})}/>
                   </div>
                 </div>
               </div>
@@ -994,8 +994,8 @@ export default function App(){
 
           {/* Nav etapas */}
           <div style={{display:"flex",gap:10,marginTop:24,justifyContent:"space-between"}}>
-            <button style={SG({padding:"9px 20px",fontSize:12,opacity:etapaIdx===0?.3:1})} onClick={()=>etapaIdx>0&&updProd(prod.id,{etapa:ETAPAS[etapaIdx-1].id})}>← Anterior</button>
-            <button style={SB({padding:"9px 24px",fontSize:12,opacity:etapaIdx===ETAPAS.length-1?.3:1})} onClick={()=>etapaIdx<ETAPAS.length-1&&updProd(prod.id,{etapa:ETAPAS[etapaIdx+1].id})}>Siguiente →</button>
+            <button style={SG({padding:"9px 20px",fontSize:12,opacity:etapaIdx===0?0.3:1})} onClick={()=>etapaIdx>0&&updProd(prod.id,{etapa:ETAPAS[etapaIdx-1].id})}>← Anterior</button>
+            <button style={SB({padding:"9px 24px",fontSize:12,opacity:etapaIdx===ETAPAS.length-1?0.3:1})} onClick={()=>etapaIdx<ETAPAS.length-1&&updProd(prod.id,{etapa:ETAPAS[etapaIdx+1].id})}>Siguiente →</button>
           </div>
         </div>
       </div>
@@ -1236,7 +1236,7 @@ export default function App(){
     {id:"gastos",l:"💸 Gastos Fijos",sec:null},
     {id:"aprend",l:"📚 Aprendizajes",sec:null},
     {id:"admin",l:"⚙️ Admin",sec:null,adminOnly:true},
-  ].filter(t=>(!t.adminOnly||user?.role==="admin")&&(!t.sec||canAccess(t.sec)));
+  ].filter(t=>(!t.adminOnly||(user&&user.role)==="admin")&&(!t.sec||canAccess(t.sec)));
 
   /* ── LOADING ── */
   if(screen==="loading")return(<div style={{background:P.bg,minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:20}}><style>{CSS}</style><div className="pulse" style={{fontFamily:"'Poppins',sans-serif",fontSize:36,fontWeight:800}}><GT>BITÁCORA PRO</GT></div><div style={{display:"flex",gap:6}}>{[0,1,2].map(i=><div key={i} style={{width:5,height:5,borderRadius:"50%",background:P.gold,animation:"pulse 1.4s ease-in-out "+(i*0.2)+"s infinite"}}/>)}</div></div>);
@@ -1488,8 +1488,8 @@ export default function App(){
             <GoldText>BITÁCORA PRO</GoldText>
           </div>
           <span style={{color:P.mt2,fontSize:12}}>|</span>
-          <span style={{fontSize:11,color:P.mt,fontWeight:400}}>{"@"+(user?.name||"")}</span>
-          {user?.role==="admin"&&<span style={{background:P.gold+"22",border:"1px solid "+P.gold+"44",borderRadius:12,padding:"1px 7px",fontSize:9,color:P.gold,letterSpacing:1,fontWeight:600}}>ADMIN</span>}
+          <span style={{fontSize:11,color:P.mt,fontWeight:400}}>{"@"+((user&&user.name)||"")}</span>
+          {(user&&user.role)==="admin"&&<span style={{background:P.gold+"22",border:"1px solid "+P.gold+"44",borderRadius:12,padding:"1px 7px",fontSize:9,color:P.gold,letterSpacing:1,fontWeight:600}}>ADMIN</span>}
         </div>
         <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
           {/* Font size control */}
@@ -1655,8 +1655,8 @@ export default function App(){
       {/* OTRAS TABS */}
       {tab!=="plan"&&(
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"60vh",gap:16}} className="anim">
-          <div style={{fontSize:40}}>{TABS.find(t=>t.id===tab)?.icon}</div>
-          <div style={{fontFamily:"'Poppins',sans-serif",fontSize:22,fontWeight:700}}><GoldText>{TABS.find(t=>t.id===tab)?.label}</GoldText></div>
+          <div style={{fontSize:40}}>{(TABS.find(t=>t.id===tab)||{}).icon}</div>
+          <div style={{fontFamily:"'Poppins',sans-serif",fontSize:22,fontWeight:700}}><GoldText>{(TABS.find(t=>t.id===tab)||{}).label}</GoldText></div>
           <div style={{fontSize:Math.max(12,fontSize-1),color:P.mt,textAlign:"center",maxWidth:320,lineHeight:1.7,fontWeight:300}}>
             Próxima entrega — Módulo 2.<br/><span style={{color:P.gold2}}>Módulo 1 completado ✦</span>
           </div>
@@ -1768,7 +1768,7 @@ export default function App(){
               {["","Producto","Estado","Etapa","Progreso","Precio",""].map((h,i)=>(!isMob||[0,1,6].includes(i))&&<div key={i} style={{fontSize:9,color:P.mt,letterSpacing:1.5,textTransform:"uppercase",fontWeight:600}}>{h}</div>)}
             </div>
             {prodsFiltrados.visibles.map(p=>{
-              const dd=DEV_STEPS.filter(s=>p.desarrollo?.steps?.[s.key]?.done).length;
+              const dd=DEV_STEPS.filter(s=>(p.desarrollo&&p.desarrollo.steps&&p.desarrollo.steps[s.key]&&p.desarrollo.steps[s.key].done)).length;
               const dp=Math.round(dd/DEV_STEPS.length*100);
               const ea=ETAPAS.find(e=>e.id===p.etapa);
               return(
@@ -1784,12 +1784,12 @@ export default function App(){
                     <div style={{fontSize:10,color:P.mt,marginTop:2}}>{p.fecha}</div>
                   </div>
                   {!isMob&&<div style={{display:"flex",alignItems:"center"}}><span style={{background:(EST_COL[p.estado]||P.mt)+"22",border:"1px solid "+(EST_COL[p.estado]||P.mt)+"44",borderRadius:12,padding:"3px 10px",fontSize:10,color:EST_COL[p.estado]||P.mt,fontWeight:600}}>{p.estado}</span></div>}
-                  {!isMob&&<div style={{display:"flex",alignItems:"center"}}><span style={{fontSize:11,color:P.mt}}>{ea?.icon} {ea?.label}</span></div>}
+                  {!isMob&&<div style={{display:"flex",alignItems:"center"}}><span style={{fontSize:11,color:P.mt}}>{(ea&&ea.icon)} {(ea&&ea.label)}</span></div>}
                   {!isMob&&<div style={{display:"flex",alignItems:"center",gap:8}}>
                     <div style={{flex:1,height:4,background:P.bg2,borderRadius:2}}><div style={{height:4,borderRadius:2,background:dp===100?P.green:P.gold,width:(dp)+"%",transition:"width .5s"}}/></div>
                     <span style={{fontSize:10,color:P.mt,minWidth:30}}>{dp}%</span>
                   </div>}
-                  {!isMob&&<div style={{display:"flex",alignItems:"center"}}><span style={{fontSize:12,color:P.gold,fontWeight:600}}>{p.investigacion?.valorVenta?COP(+p.investigacion.valorVenta):"—"}</span></div>}
+                  {!isMob&&<div style={{display:"flex",alignItems:"center"}}><span style={{fontSize:12,color:P.gold,fontWeight:600}}>{p.(investigacion&&investigacion.valorVenta)?COP(+p.investigacion.valorVenta):"—"}</span></div>}
                   <div style={{display:"flex",alignItems:"center",gap:4,justifyContent:"flex-end"}} onClick={e=>e.stopPropagation()}>
                     <button title={p.pinned?"Desfijar":"Fijar"} onClick={()=>updProd(p.id,{pinned:!p.pinned})} style={{background:"none",border:"none",color:p.pinned?P.gold:P.mt2,fontSize:14,padding:3}}>📌</button>
                     <button title="Ocultar" onClick={()=>updProd(p.id,{hidden:true})} style={{background:"none",border:"none",color:P.mt2,fontSize:14,padding:3}}>👁</button>
@@ -2077,7 +2077,7 @@ export default function App(){
                 <span style={{fontSize:10,color:P.mt2}}>ordenes_*.xlsx / ordenes_*.csv</span>
                 <input type="file" accept=".csv,.xlsx,.xls" style={{display:"none"}} onChange={e=>e.target.files[0]&&importDropi(e.target.files[0])}/>
               </label>
-              {dropiData?.archivo&&<div style={{marginTop:10,fontSize:11,color:P.green}}>✓ Último archivo: {dropiData.archivo} — importado el {dropiData.fechaImport}</div>}
+              {(dropiData&&dropiData.archivo)&&<div style={{marginTop:10,fontSize:11,color:P.green}}>✓ Último archivo: {dropiData.archivo} — importado el {dropiData.fechaImport}</div>}
             </div>
 
             {dropiData&&(
@@ -2167,10 +2167,10 @@ export default function App(){
                 <span style={{fontSize:10,color:P.mt2}}>Exportar desde Meta Ads Manager → Campañas</span>
                 <input type="file" accept=".csv,.xlsx,.xls" style={{display:"none"}} onChange={e=>e.target.files[0]&&importMeta(e.target.files[0])}/>
               </label>
-              {metaData?.archivo&&<div style={{marginTop:10,fontSize:11,color:P.green}}>✓ Último archivo: {metaData.archivo} — {metaData.totalRows} filas — importado el {metaData.fecha}</div>}
+              {(metaData&&metaData.archivo)&&<div style={{marginTop:10,fontSize:11,color:P.green}}>✓ Último archivo: {metaData.archivo} — {metaData.totalRows} filas — importado el {metaData.fecha}</div>}
             </div>
 
-            {metaData?.filas&&metaData.filas.length>0&&(
+            {(metaData&&metaData.filas)&&metaData.filas.length>0&&(
               <>
                 {/* KPIs Meta */}
                 {(()=>{
@@ -2425,7 +2425,7 @@ export default function App(){
           <div style={{fontFamily:"'Poppins',sans-serif",fontSize:isMob?15:20,fontWeight:800}}><GT>BITÁCORA PRO</GT></div>
           <span style={{color:P.mt2}}>|</span>
           <span style={{fontSize:11,color:P.mt}}>🌐 Panel Global</span>
-          <span style={{background:P.gold+"22",border:"1px solid "+P.gold+"44",borderRadius:12,padding:"1px 7px",fontSize:9,color:P.gold,letterSpacing:1,fontWeight:600}}>{user?.role==="admin"?"ADMIN":"USUARIO"}</span>
+          <span style={{background:P.gold+"22",border:"1px solid "+P.gold+"44",borderRadius:12,padding:"1px 7px",fontSize:9,color:P.gold,letterSpacing:1,fontWeight:600}}>{(user&&user.role)==="admin"?"ADMIN":"USUARIO"}</span>
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
           <button style={SB({padding:"7px 16px",fontSize:11})} onClick={()=>doSave()}>{saveMsg||"GUARDAR"}</button>
@@ -2492,10 +2492,10 @@ export default function App(){
               </div>
               <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
                 <SH label="Gastos Fijos del Mes"/>
-                {gastos.filter(g=>g.fecha?.startsWith(monthStr())).length===0?(
+                {gastos.filter(g=>g.(fecha&&fecha.startsWith)(monthStr())).length===0?(
                   <div style={{textAlign:"center",padding:"20px",color:P.mt,fontSize:12}}>Sin gastos registrados este mes</div>
                 ):(
-                  gastos.filter(g=>g.fecha?.startsWith(monthStr())).map(g=>(
+                  gastos.filter(g=>g.(fecha&&fecha.startsWith)(monthStr())).map(g=>(
                     <div key={g.id} style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:"1px solid "+P.border}}>
                       <span style={{fontSize:12,color:P.mt}}>{g.concepto}</span>
                       <span style={{fontSize:12,color:P.orange,fontWeight:600}}>{COP(+g.valor)}</span>
@@ -2700,7 +2700,7 @@ export default function App(){
         )}
 
         {/* ════ ADMIN ════ */}
-        {tab==="admin"&&user?.role==="admin"&&(
+        {tab==="admin"&&(user&&user.role)==="admin"&&(
           <div className="anim">
             <h2 style={{fontFamily:"'Poppins',sans-serif",fontSize:isMob?18:24,fontWeight:800,marginBottom:20}}><GT>Administrar Usuarios</GT></h2>
 
@@ -2745,7 +2745,7 @@ export default function App(){
                       <div style={{display:"flex",alignItems:"center",gap:8}}>
                         <span style={{fontSize:10,color:P.mt}}>Cuenta</span>
                         <div onClick={()=>u.name!==user.name&&toggleUsuario(u.name,"active",!u.active)}
-                          style={{width:36,height:20,borderRadius:10,background:u.active!==false?P.green:"#252525",cursor:u.name===user.name?"default":"pointer",position:"relative",transition:"background .2s",flexShrink:0,border:"1px solid "+(u.active!==false?P.green+"88":"#333"),opacity:u.name===user.name?.5:1}}>
+                          style={{width:36,height:20,borderRadius:10,background:u.active!==false?P.green:"#252525",cursor:u.name===user.name?"default":"pointer",position:"relative",transition:"background .2s",flexShrink:0,border:"1px solid "+(u.active!==false?P.green+"88":"#333"),opacity:u.name===user.(name&&name.5):1}}>
                           <div style={{position:"absolute",top:2,left:u.active!==false?17:2,width:14,height:14,borderRadius:"50%",background:u.active!==false?"#080400":"#555",transition:"left .2s"}}/>
                         </div>
                         <span style={{fontSize:10,color:u.active!==false?P.green:P.red,fontWeight:600}}>{u.active!==false?"Activo":"Inactivo"}</span>
@@ -2757,7 +2757,7 @@ export default function App(){
                         <div style={{fontSize:9,color:P.mt,marginBottom:6,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>Secciones habilitadas</div>
                         <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
                           {SECCIONES_ADMIN.map(sec=>{
-                            const enabled=(u.secciones?.[sec])!==false;
+                            const enabled=(u.(secciones&&secciones[sec]))!==false;
                             return(
                               <button key={sec} onClick={()=>toggleSeccion(u.name,sec,!enabled)}
                                 style={{background:enabled?P.gold+"22":"transparent",border:"1px solid "+(enabled?P.gold+"44":P.border),borderRadius:20,color:enabled?P.gold:P.mt2,padding:"3px 10px",fontSize:9,fontWeight:600,fontFamily:"'Poppins',sans-serif",transition:"all .2s"}}>{sec}</button>
