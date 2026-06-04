@@ -144,7 +144,7 @@ const newProd=()=>({id:Date.now()+Math.random().toString(36).slice(2),nombre:"",
 
 const GoldText=({children,style={}})=>(<span style={{background:"linear-gradient(135deg,"+P.gold+","+P.gold2+")",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",...style}}>{children}</span>);
 
-export default function AppA1(){
+export default function App(){
   const[screen,setScreen]=useState("loading");
   const[isReg,setIsReg]=useState(false);
   const[uname,setUname]=useState("");
@@ -267,6 +267,14 @@ export default function AppA1(){
   const fn=user&&user.nc?user.nc:(user&&user.name?user.name:"");
   const firstName=fn.split(" ")[0]||fn;
 
+    // Embedded mode: skip auth
+  if(embeddedUser&&screen==="loading"){
+    setTimeout(()=>{
+      setUser(embeddedUser);
+      if(embeddedModulo)setModulo(embeddedModulo);
+      setScreen("app");
+    },0);
+  }
   if(screen==="loading")return(<div style={{background:P.bg,minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:20}}><style>{CSS}</style><div style={{fontFamily:"'Poppins',sans-serif",fontSize:32,fontWeight:800,lineHeight:1}}><GT>BITACORA PRO</GT></div><div style={{fontSize:9,color:P.mt2,letterSpacing:4,textTransform:"uppercase",marginTop:6,fontWeight:300}}>by Estefani Horta</div><div style={{display:"flex",gap:6,marginTop:12}}>{[0,1,2].map(i=><div key={i} style={{width:6,height:6,borderRadius:"50%",background:P.gold,animation:"pulse 1.4s ease-in-out "+(i*0.2)+"s infinite"}}/>)}</div></div>);
 
   if(screen==="auth")return(
