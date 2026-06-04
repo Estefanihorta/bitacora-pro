@@ -50,7 +50,7 @@ const CopyBtn=({text,small=false})=>{const[ok,setOk]=useState(false);return(<but
 const Acc=({num,label,tag,color=P.gold,note="",children,defaultOpen=false})=>{const[open,setOpen]=useState(defaultOpen);return(<div style={{background:P.card,border:open ? "1px solid "+color+"55" : "1px solid "+P.border,borderRadius:12,overflow:"hidden",marginBottom:10,transition:"border-color .2s"}}><button onClick={()=>setOpen(!open)} style={{width:"100%",background:"none",border:"none",display:"flex",alignItems:"center",gap:10,padding:"13px 16px",cursor:"pointer",textAlign:"left"}}><div style={{width:28,height:28,borderRadius:8,background:color+"22",border:"1px solid "+color+"44",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{fontSize:10,color,fontWeight:800,letterSpacing:-.5}}>{num}</span></div><div style={{flex:1}}><div style={{fontSize:9,color,letterSpacing:1.5,textTransform:"uppercase",fontWeight:600,marginBottom:2}}>{tag}</div><div style={{fontSize:13,color:P.tx,fontWeight:600}}>{label}</div></div><span style={{color:P.mt,fontSize:14,transition:"transform .25s",display:"inline-block",transform:open?"rotate(180deg)":"rotate(0)"}}>▾</span></button>{open&&(<div className="acc" style={{borderTop:"1px solid "+P.border,padding:"14px 16px 16px"}}>{note&&<div style={{background:color+"11",border:"1px solid "+color+"22",borderRadius:8,padding:"8px 12px",fontSize:11,color,marginBottom:12,lineHeight:1.6}}>{note}</div>}{children}</div>)}</div>);};
 const PromptBox=({text})=>(<div><div style={{background:P.bg,border:"1px solid "+P.border,borderRadius:8,padding:"12px 14px",fontSize:11.5,color:P.mt,lineHeight:1.9,whiteSpace:"pre-wrap",maxHeight:280,overflowY:"auto",marginBottom:10,fontFamily:"monospace"}}>{text}</div><div style={{display:"flex",justifyContent:"flex-end"}}><CopyBtn text={text}/></div></div>);
 
-// A1 constants (Planner + Productos)
+// Module constants from A1/A2
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 ::-webkit-scrollbar{width:4px;height:4px}
@@ -167,7 +167,6 @@ const scoreA=a=>{
 const scoreInfo=s=>s>=75?{label:"Alta Posibilidad ✦",color:P.green}:s>=55?{label:"Alta Posibilidad de Testeo",color:P.gold}:s>=35?{label:"Media Posibilidad",color:"#f97316"}:{label:"Baja Posibilidad",color:P.red};
 const newProd=()=>({id:Date.now()+Math.random().toString(36).slice(2),nombre:"",estado:"Investigando",etapa:"investigacion",fecha:todayStr(),pinned:false,hidden:false,foto:"",investigacion:{descripcion:"",porQueVender:"",linkAmazon:"",linkTrends:"",linkAli:"",linkML:"",linksComp:"",linksVideos:"",precioProveedor:0,cantProveedores:1,competencia:"Entre 2 y 3",valorVenta:0,buyerPersona:"",notas:""},analisis:{cantProv:1,cantComp:"Entre 2 y 3",catalogo:"Si",importar:"Si",ticket:"Bajo",necesidad:"Si",queNec:"",wow:"No",cautivador:"Si",percepcion:"Si",black:"No",precReal:0,plataforma:"Dropi"},calculadora:{pais:"Colombia",util:10,efect:75,cpa:20,canc:15,tax:0,proveedor:0,admin:0,fulfi:0,manual:0,fletes:{...DEF_FL},cpa2s:{...DEF_C2}},oferta:{precio1:"",precio2:"",precio3:"",bundle:"",garantia:"",bonus:"",upsell:"",urgencia:"",notas:""},desarrollo:{steps:Object.fromEntries(DEV_STEPS.map(s=>[s.key,{done:false,subs:Object.fromEntries((s.subs||[]).map(sb=>[sb,false]))}]))},creativos:{angulos:"",guion:"",prompts:"",notas:""},campana:{fecha:"",plataforma:"Meta Ads",inversion:0,ingresos:0,ventas:0,cpa:0,ctr:0,cpm:0,estado:"Testeando",notas:""}});
 
-// A2 constants (Trafficker + Creativos + Metricas)
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 ::-webkit-scrollbar{width:4px;height:4px}
@@ -371,15 +370,7 @@ const SECCIONES_ADMIN=["Planner","Productos","Trafficker","Creativos","Tiendas",
 const bLA=(p,ang)=>`Eres un experto en diseño de landing pages para ecommerce COD en LATAM, especializado en productos de compra por impulso vendidos a través de Meta Ads.\n\nVoy a darte todo lo que necesitas sobre el producto antes de que empieces a trabajar. No generes nada todavía — solo confirma que entendiste y espera mi instrucción.\n\n--- PRODUCTO ---\nNombre comercial (si ya lo tienes): ${p.nombre||"sin definir aún"}\nDescripción: ${p.descripcion||"[qué es, para qué sirve, qué problema resuelve]"}\nPrecio antes: ${p.precioAntes||"[$ precio tachado]"}\nPrecio ahora: ${p.precioAhora||"[$ precio actual]"}\n\n--- AUDIENCIA ---\nPúblico objetivo: ${p.buyerPersona||"[ej: mujeres 30-55 / sin definir, en testeo]"}\nÁngulo de venta principal: ${p.anguloPpal||ang?.split("\n")[0]||"[ej: comodidad / ahorro / status / sin definir aún]"}\nPaís(es) de venta: ${p.pais||"Colombia"}\n\n--- ESTILO VISUAL ---\nColores: ${p.paleta||'[color fondo / color marca / color botón CTA — o sin definir]'}\nTono de comunicación: directo, confiable, sin exageración ni lenguaje de mercado\nReferencia de estilo: páginas limpias, profesionales, sin saturación visual\n\n--- REGLAS QUE SIEMPRE APLICAN ---\n- Máximo 3 colores en toda la landing\n- Sin párrafos largos ni bloques de texto denso\n- Sin íconos decorativos innecesarios\n- Sin fondos degradados recargados\n- Los botones de compra se configuran en la plataforma — no los incluyas en los diseños\n- Trabajaremos bloque por bloque — espera mi aprobación antes de continuar al siguiente\n\n¿Entendido? Confirma y espera.`;
 
 const FLETES={Colombia:20000,Mexico:180,Ecuador:7,Espana:5,Chile:6500,Peru:15};
-const calcCosteo=(v)=>{
-  const prec=+(v.precProv||0),flete=FLETES[v.pais||"Colombia"]||20000;
-  const fleteD=flete/(+(v.efectividad||0.75));
-  const cpa=prec*(+(v.pctCpa||0.2));
-  const total=prec+fleteD+cpa+(+(v.costoAdmin||0));
-  const pv=+(v.pvManual||0);const util=pv-total;const pctUtil=pv>0?util/pv:0;
-  return{prec,fleteD,cpa,total,pv,util,pctUtil,cpaBreak:pv>0?pv-prec-fleteD:0,
-    pv2:pv*2*0.8,util2:pv*2*0.8*2-total*2,pv3:pv*3*0.7,util3:pv*3*0.7*3-total*3};
-};
+const calcCosteo=(v)=>{const prec=+(v.precProv||0),flete=FLETES[v.pais||"Colombia"]||20000;const fleteD=flete/(+(v.efectividad||0.75));const cpa=prec*(+(v.pctCpa||0.2));const total=prec+fleteD+cpa+(+(v.costoAdmin||0));const pv=+(v.pvManual||0);const util=pv-total;const pctUtil=pv>0?util/pv:0;return{prec,fleteD,cpa,total,pv,util,pctUtil,cpaBreak:pv>0?pv-prec-fleteD:0,pv2:pv*2*0.8,util2:pv*2*0.8*2-total*2,pv3:pv*3*0.7,util3:pv*3*0.7*3-total*3};};
 
 export default function App(){
   const[screen,setScreen]=useState("loading");
@@ -404,12 +395,10 @@ export default function App(){
   const[noteOpen,setNoteOpen]=useState(false);
   const[calcOpen,setCalcOpen]=useState(false);
   const[calcV,setCalcV]=useState({pais:"Colombia",precProv:0,efectividad:0.75,pctCpa:0.2,pvManual:0,costoAdmin:0});
-  // A1 state (Planner + Productos)
-  // M1 state
+  // M1 Planner
   const[tab,setTab]=useState("plan");
   const[date,setDate]=useState(todayStr());
   const[day,setDay]=useState(null);
-  const[calcVal,setCalcVal]=useState("");
   const[calcHistory,setCalcHistory]=useState([]);
   const[waSent,setWaSent]=useState(false);
   const[fontSize,setFontSize]=useState(14);
@@ -417,16 +406,146 @@ export default function App(){
 
 
   /* Auto-login */
-  // M2 state
+
+  /* Auto-save */
+  useEffect(()=>{
+    if(!user||!day)return;
+    clearTimeout(saveRef.current);
+    saveRef.current=setTimeout(()=>doSave(true),2000);
+    return()=>clearTimeout(saveRef.current);
+  },[day]);
+
+  /* WA midnight */
+  useEffect(()=>{
+    if(!user||!day)return;
+    const check=()=>{
+      const now=new Date();
+      if(now.getHours()===23&&now.getMinutes()===59&&!waSent){setWaSent(true);sendWA();}
+    };
+    const iv=setInterval(check,30000);
+    return()=>clearInterval(iv);
+  },[user,day,waSent]);
+
+  const sendWA=()=>{
+    if(!day)return;
+    const done=day.priorities.filter(p=>p.t&&p.d).map(p=>"✅ "+(p.t)).join("\n");
+    const pending=day.priorities.filter(p=>p.t&&!p.d).map(p=>"⏳ "+(p.t)).join("\n");
+    const sd=day.sched.filter(s=>s.task&&s.done).length;
+    const st=day.sched.filter(s=>s.task).length;
+    const msg="🗓 *BITÁCORA PRO — "+(fmtDate(date))+"*\n\n*✅ Completado:*\n"+(done||"Nada completado")+"\n\n*⏳ Pendiente:*\n"+(pending||"Todo listo 🎉")+"\n\n*📅 Horario:* "+(sd)+"/"+(st)+" tareas\n\n_by Bitácora Pro_";
+    window.open("https://wa.me/?text="+(encodeURIComponent(msg)),"_blank");
+  };
+
+  const doSave=async(silent=false)=>{
+    if(!silent)setSaveMsg("guardando...");
+    if(day)await DB.set("d:"+(user.name)+":"+(date),day);
+    await DB.set("floatnote:"+(user.name),noteText);
+    const ud=await DB.get("u:"+(user.name))||{};
+    await DB.set("u:"+(user.name),{...ud,fontSize});
+    if(!silent){setSaveMsg("✓ Guardado");setTimeout(()=>setSaveMsg(""),2000);}
+  };
+
+  const changeDate=async nd=>{
+    if(day)await DB.set("d:"+(user.name)+":"+(date),day);
+    setDate(nd);setDay(await DB.get("d:"+(user.name)+":"+(nd))||newDay(nd));setWaSent(false);
+  };
+
+
+  /* ── LOADING ── */
+  if(screen==="loading")return(
+    <div style={{background:P.bg,minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:20}}>
+      <style>{CSS}</style>
+      <div style={{textAlign:"center"}}>
+        <div style={{fontFamily:"'Poppins',sans-serif",fontSize:10,color:P.mt2,letterSpacing:5,textTransform:"uppercase",marginBottom:10,fontWeight:300}}>estefani horta</div>
+        <div className="pulse" style={{fontFamily:"'Poppins',sans-serif",fontSize:40,fontWeight:800,lineHeight:1}}>
+          <GoldText>BITÁCORA PRO</GoldText>
+        </div>
+      </div>
+      <div style={{display:"flex",gap:6,marginTop:8}}>
+        {[0,1,2].map(i=><div key={i} style={{width:5,height:5,borderRadius:"50%",background:P.gold,animation:"pulse 1.4s ease-in-out "+(i*0.2)+"s infinite"}}/>)}
+      </div>
+      <div style={{fontSize:10,color:P.mt2,letterSpacing:3,marginTop:4,fontWeight:300}}>CARGANDO SESIÓN</div>
+    </div>
+  );
+
+  /* ── AUTH ── */
+  if(screen==="auth")return(
+    <div style={{background:P.bg,minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+      <style>{CSS}</style>
+      <div style={{position:"fixed",inset:0,overflow:"hidden",pointerEvents:"none"}}>
+        <div style={{position:"absolute",top:"15%",left:"10%",width:300,height:300,borderRadius:"50%",background:(P.gold)+"08",filter:"blur(80px)"}}/>
+        <div style={{position:"absolute",bottom:"15%",right:"10%",width:250,height:250,borderRadius:"50%",background:(P.gold3)+"0a",filter:"blur(60px)"}}/>
+      </div>
+      <div style={{width:"100%",maxWidth:400,position:"relative",zIndex:1}} className="anim">
+        <div style={{textAlign:"center",marginBottom:36}}>
+          <div style={{fontFamily:"'Poppins',sans-serif",fontSize:9,color:P.mt2,letterSpacing:5,textTransform:"uppercase",marginBottom:10,fontWeight:300}}>estefani horta</div>
+          <h1 style={{fontFamily:"'Poppins',sans-serif",fontSize:isMob?40:52,fontWeight:800,lineHeight:1,margin:0}}>
+            <GoldText>BITÁCORA</GoldText>
+          </h1>
+          <h1 style={{fontFamily:"'Poppins',sans-serif",fontSize:isMob?40:52,fontWeight:300,lineHeight:1,color:P.tx,margin:0,marginTop:-4}}>PRO</h1>
+          <div style={{display:"flex",alignItems:"center",gap:12,justifyContent:"center",margin:"18px 0 10px"}}>
+            <div style={{flex:1,height:"0.5px",background:"linear-gradient(90deg,transparent,"+(P.gold3)+")"}}/>
+            <div style={{width:5,height:5,background:P.gold,transform:"rotate(45deg)"}}/>
+            <div style={{flex:1,height:"0.5px",background:"linear-gradient(90deg,"+(P.gold3)+",transparent)"}}/>
+          </div>
+          <div style={{fontFamily:"'Poppins',sans-serif",fontSize:9,color:P.mt,letterSpacing:2.5,fontWeight:400}}>SISTEMA DE GESTIÓN ECOMMERCE</div>
+        </div>
+        <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:16,padding:28}}>
+          <div style={{fontFamily:"'Poppins',sans-serif",fontSize:10,color:P.mt,letterSpacing:2,marginBottom:20,textAlign:"center",fontWeight:500}}>
+            {isReg?"CREAR CUENTA":"BIENVENIDA DE VUELTA"}
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:14}}>
+            <div>
+              <div style={{fontSize:9,letterSpacing:2,color:P.mt,marginBottom:6,textTransform:"uppercase",fontWeight:600}}>Usuario</div>
+              <input style={SI()} value={uname} onChange={e=>setUname(e.target.value)} placeholder="tu_usuario" onKeyDown={e=>e.key==="Enter"&&doAuth()} autoCapitalize="none"/>
+              {uname&&uname.includes(" ")&&<div style={{fontSize:10,color:P.gold,marginTop:4}}>→ Se guardará como: <b>{uname.trim().toLowerCase().replace(/[\s\/\\'"+]+/g,"_")}</b></div>}
+            </div>
+            <div>
+              <div style={{fontSize:9,letterSpacing:2,color:P.mt,marginBottom:6,textTransform:"uppercase",fontWeight:600}}>Contraseña</div>
+              <input style={SI()} type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="••••••••" onKeyDown={e=>e.key==="Enter"&&doAuth()}/>
+            </div>
+            {err&&<div style={{background:"#1e0808",border:"1px solid #5a181844",borderRadius:8,padding:"10px 14px",color:"#f08888",fontSize:12}}>{err}</div>}
+            <button style={SB({width:"100%",padding:"13px 0",fontSize:12,marginTop:4})} onClick={doAuth} disabled={busy}>
+              {busy?<span className="pulse">▪ ▪ ▪</span>:isReg?"CREAR CUENTA":"ENTRAR"}
+            </button>
+          </div>
+          <div style={{textAlign:"center",marginTop:18,fontSize:12,color:P.mt}}>
+            {isReg?"¿Ya tienes cuenta? ":"¿Primera vez? "}
+            <span style={{color:P.gold,cursor:"pointer",fontWeight:600}} onClick={()=>{setIsReg(!isReg);setErr("");}}>
+              {isReg?"Inicia sesión":"Regístrate"}
+            </span>
+          </div>
+        </div>
+        <div style={{textAlign:"center",marginTop:16,fontSize:9,color:P.mt2,letterSpacing:2,fontWeight:300}}>✦ SINCRONIZACIÓN ENTRE DISPOSITIVOS ✦</div>
+      </div>
+    </div>
+  );
+
+  if(!day)return(
+    <div style={{background:P.bg,minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <style>{CSS}</style>
+      <div className="pulse" style={{fontFamily:"'Poppins',sans-serif",fontSize:18,fontWeight:600}}><GoldText>Cargando...</GoldText></div>
+    </div>
+  );
+
+  const TABS=[
+    {id:"plan",icon:"📋",label:"Planner"},
+    {id:"productos",icon:"📦",label:"Productos"},
+    {id:"trafficker",icon:"📊",label:"Trafficker"},
+    {id:"creativos",icon:"🎨",label:"Creativos"},
+    {id:"tiendas",icon:"🏪",label:"Tiendas"},
+    {id:"herramientas",icon:"🔧",label:"Herramientas"},
+    {id:"metricas",icon:"📈",label:"Métricas"},
+    {id:"admin",icon:"⚙️",label:"Admin",adminOnly:true},
+  ].filter(t=>!t.adminOnly||user?.role==="admin");
+
+  // M2 Productos
   /* ── ALL HOOKS FIRST — never conditionally ── */
-  const[selProd,setSelProd]=useState(null);
   const[search,setSearch]=useState("");
   const[filtroEst,setFiltroEst]=useState("Todos");
-  const[confirmDel,setConfirmDel]=useState(null);
 
   /* derived — always computed */
   const prod=useMemo(()=>productos.find(p=>p.id===selProd)||null,[productos,selProd]);
-  const prodCreativo=fuenteProd==="analizado"?(productos.find(p=>p.id===prodSelId)||productos[0]):prodLibre;
   const prodsFiltrados=useMemo(()=>{
     let r=[...productos];
     if(search)r=r.filter(p=>p.nombre.toLowerCase().includes(search.toLowerCase()));
@@ -436,76 +555,610 @@ export default function App(){
   },[productos,search,filtroEst]);
 
 
+
   useEffect(()=>{
-    return()=>window.removeEventListener("resize",r);
-  },[]);
-  },[]);
-    const u=uname.trim().toLowerCase().replace(/[\s/'"]+/g,"_");
-    if(!u||!pass){setErr("Completa todos los campos");setBusy(false);return;}
-    if(isReg){
-      if(!nombre.trim()){setErr("Ingresa tu nombre");setBusy(false);return;}
-      if(pass.length<4){setErr("Minimo 4 caracteres");setBusy(false);return;}
-      const ex=await DB.get("u:"+u);
-      if(ex){setErr("Usuario ya existe");setBusy(false);return;}
-      const nc=(nombre.trim()+" "+apellido.trim()).trim();
-      const ud={ph:hash(pass),role:"admin",active:true,nc};
-      await DB.set("u:"+u,ud);
-      await DB.set("session:active",{u,ph:hash(pass)});
-      await DB.set("session:lastuser",{u});
-      setUser({name:u,ph:hash(pass),role:"admin",nc});
-      setScreen("app");
-    }else{
-      const ud=await DB.get("u:"+u);
-      if(!ud){setErr("Usuario no encontrado");setBusy(false);return;}
-      if(ud.ph!==hash(pass)){setErr("Contrasena incorrecta");setBusy(false);return;}
-      if(ud.active===false){setErr("Cuenta desactivada");setBusy(false);return;}
-      await DB.set("session:active",{u,ph:ud.ph});
-      await DB.set("session:lastuser",{u});
-      setUser({name:u,ph:ud.ph,role:ud.role||"user",nc:ud.nc||u});
-      const p=await DB.get("productos:"+u)||[];
-      setProductos(p);
-      setScreen("app");
-    }
-    setBusy(false);
-  };
-    setUser(null);setScreen("auth");setUname("");setPass("");
-    setNombre("");setApellido("");setMenuOpen(false);
-  };
+    if(!user||screen!=="app")return;
+    clearTimeout(saveRef.current);
+    saveRef.current=setTimeout(()=>DB.set("productos:"+(user.name),productos),2000);
+  },[productos,user,screen]);
+
   const doSave=async(silent=false)=>{
     if(!silent)setSaveMsg("guardando...");
-    if(user){
-      await DB.set("productos:"+user.name,productos);
-    }
-    if(!silent){setSaveMsg("Guardado");setTimeout(()=>setSaveMsg(""),2000);}
+    if(user)await DB.set("productos:"+(user.name),productos);
+    if(!silent){setSaveMsg("✓ Guardado");setTimeout(()=>setSaveMsg(""),2000);}
   };
 
+  const updEtapa=(id,etapa,patch)=>setProductos(prev=>prev.map(p=>p.id===id?{...p,[etapa]:{...p[etapa],...patch}}:p));
 
-  const MODS=[
-    {id:"M1",icon:"📋",label:"Planner",desc:"Planificacion diaria",color:P.gold},
-    {id:"M2",icon:"📦",label:"Productos",desc:"Pipeline de productos",color:P.blue},
-  ];
-  const fn=user&&user.nc?user.nc:(user&&user.name?user.name:"");
-  const firstName=fn.split(" ")[0]||fn;
+  /* ════════ LOADING ════════ */
+  if(screen==="loading")return(
+    <div style={{background:P.bg,minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:20}}>
+      <style>{CSS}</style>
+      <div className="pulse" style={{fontFamily:"'Poppins',sans-serif",fontSize:36,fontWeight:800}}><GT>BITÁCORA PRO</GT></div>
+      <div style={{display:"flex",gap:6}}>{[0,1,2].map(i=><div key={i} style={{width:5,height:5,borderRadius:"50%",background:P.gold,animation:"pulse 1.4s ease-in-out "+(i*0.2)+"s infinite"}}/>)}</div>
+    </div>
+  );
 
+  /* ════════ AUTH ════════ */
+  if(screen==="auth")return(
+    <div style={{background:P.bg,minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+      <style>{CSS}</style>
+      <div style={{width:"100%",maxWidth:400}} className="anim">
+        <div style={{textAlign:"center",marginBottom:36}}>
+          <div style={{fontSize:9,color:P.mt2,letterSpacing:5,textTransform:"uppercase",marginBottom:10,fontWeight:300}}>estefani horta</div>
+          <h1 style={{fontFamily:"'Poppins',sans-serif",fontSize:48,fontWeight:800,lineHeight:1,margin:0}}><GT>BITÁCORA</GT></h1>
+          <h1 style={{fontFamily:"'Poppins',sans-serif",fontSize:48,fontWeight:300,lineHeight:1,color:P.tx,margin:0}}>PRO</h1>
+        </div>
+        <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:16,padding:28}}>
+          <div style={{display:"flex",flexDirection:"column",gap:14}}>
+            <div><div style={{fontSize:9,letterSpacing:2,color:P.mt,marginBottom:6,textTransform:"uppercase",fontWeight:600}}>Usuario</div>
+              <input style={SI()} value={uname} onChange={e=>setUname(e.target.value)} placeholder="tu_usuario" onKeyDown={e=>e.key==="Enter"&&doAuth()} autoCapitalize="none"/></div>
+            <div><div style={{fontSize:9,letterSpacing:2,color:P.mt,marginBottom:6,textTransform:"uppercase",fontWeight:600}}>Contraseña</div>
+              <input style={SI()} type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="••••••••" onKeyDown={e=>e.key==="Enter"&&doAuth()}/></div>
+            {err&&<div style={{background:"#1e0808",border:"1px solid #5a181844",borderRadius:8,padding:"10px 14px",color:"#f08888",fontSize:12}}>{err}</div>}
+            <button style={SB({width:"100%",padding:"13px 0",fontSize:12,marginTop:4})} onClick={doAuth} disabled={busy}>
+              {busy?<span className="pulse">▪ ▪ ▪</span>:isReg?"CREAR CUENTA":"ENTRAR"}
+            </button>
+          </div>
+          <div style={{textAlign:"center",marginTop:18,fontSize:12,color:P.mt}}>
+            {isReg?"¿Ya tienes cuenta? ":"¿Primera vez? "}
+            <span style={{color:P.gold,cursor:"pointer",fontWeight:600}} onClick={()=>{setIsReg(!isReg);setErr("");}}>
+              {isReg?"Inicia sesión":"Regístrate"}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
+  /* ════════ DETALLE PRODUCTO ════════ */
+  if(selProd&&prod){
+    const sc=scoreA(prod.analisis||{});
+    const si=scoreInfo(sc);
+    const cp=calcP(prod.calculadora||{});
+    const devDone=DEV_STEPS.filter(s=>prod.desarrollo?.steps?.[s.key]?.done).length;
+    const devPct=Math.round(devDone/DEV_STEPS.length*100);
+    const etapaIdx=ETAPAS.findIndex(e=>e.id===prod.etapa);
 
-  // A2 state (Trafficker + Creativos + Metricas)
-  // shared data
-  // M3 state
+    return(
+      <div style={{fontFamily:"'Poppins',sans-serif",background:P.bg,minHeight:"100vh",color:P.tx}}>
+        <style>{CSS}</style>
+        {/* Header */}
+        <div style={{background:"#060604",borderBottom:"1px solid "+P.border,padding:isMob?"8px 14px":"10px 24px",display:"flex",alignItems:"center",gap:12,flexWrap:"wrap",position:"sticky",top:0,zIndex:100}}>
+          <button style={SG({padding:"6px 14px",fontSize:12})} onClick={()=>setSelProd(null)}>← Volver</button>
+          <input style={{background:"none",border:"none",fontFamily:"'Poppins',sans-serif",fontSize:isMob?15:20,fontWeight:700,color:P.tx,flex:1,minWidth:0,outline:"none"}}
+            value={prod.nombre} placeholder="Nombre del producto..." onChange={e=>updProd(prod.id,{nombre:e.target.value})}/>
+          <select style={SI({width:"auto",padding:"5px 10px",fontSize:12,color:EST_COL[prod.estado]||P.gold})}
+            value={prod.estado} onChange={e=>updProd(prod.id,{estado:e.target.value})}>
+            {ESTADOS.map(s=><option key={s}>{s}</option>)}
+          </select>
+          <button style={SB({padding:"7px 16px",fontSize:11})} onClick={()=>doSave()}>{saveMsg||"GUARDAR"}</button>
+        </div>
+        {/* Etapas */}
+        <div style={{display:"flex",background:"#060604",borderBottom:"1px solid "+P.border,overflowX:"auto",position:"sticky",top:isMob?53:57,zIndex:99}}>
+          {ETAPAS.map((e,i)=>{
+            const isActive=prod.etapa===e.id,isDone=i<etapaIdx;
+            return(<button key={e.id} onClick={()=>updProd(prod.id,{etapa:e.id})} style={{background:"none",border:"none",borderBottom:isActive?"2px solid "+(P.gold):"2px solid transparent",color:isActive?P.gold:isDone?P.green:P.mt,padding:isMob?"8px 10px":"10px 18px",fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:isMob?9:10,letterSpacing:.8,textTransform:"uppercase",whiteSpace:"nowrap",transition:"all .2s",display:"flex",alignItems:"center",gap:5}}>
+              <span>{e.icon}</span><span>{e.label}</span>{isDone&&<span style={{color:P.green,fontSize:10}}>✓</span>}
+            </button>);
+          })}
+        </div>
+
+        <div style={{padding:isMob?"12px":"20px",maxWidth:1200,margin:"0 auto"}} className="slide">
+
+          {/* INVESTIGACIÓN */}
+          {prod.etapa==="investigacion"&&(
+            <div style={{display:"grid",gridTemplateColumns:isMob?"1fr":"1fr 1fr",gap:14}}>
+              <div style={{display:"flex",flexDirection:"column",gap:14}}>
+                <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                  <SH label="Foto del Producto"/>
+                  {prod.foto?(
+                    <div style={{position:"relative"}}>
+                      <img src={prod.foto} alt="" style={{width:"100%",borderRadius:10,maxHeight:240,objectFit:"cover"}}/>
+                      <button onClick={()=>updProd(prod.id,{foto:""})} style={{position:"absolute",top:8,right:8,background:"#000000aa",border:"none",color:"#fff",borderRadius:"50%",width:28,height:28,fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
+                    </div>
+                  ):(
+                    <label style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:140,border:"2px dashed "+(P.border),borderRadius:10,cursor:"pointer",gap:8}}>
+                      <span style={{fontSize:32}}>📸</span>
+                      <span style={{fontSize:12,color:P.mt}}>Subir foto del producto</span>
+                      <input type="file" accept="image/*" style={{display:"none"}} onChange={e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>updProd(prod.id,{foto:ev.target.result});r.readAsDataURL(f);}}/>
+                    </label>
+                  )}
+                </div>
+                <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                  <SH label="Datos Básicos"/>
+                  {[["¿Por qué lo venderías?","porQueVender"],["Descripción","descripcion"],["Buyer Persona","buyerPersona"]].map(([lbl,key])=>(
+                    <div key={key} style={{marginBottom:12}}>
+                      <div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>{lbl}</div>
+                      <textarea style={SI({height:70,resize:"vertical",lineHeight:1.6,fontSize:12})} value={prod.investigacion?.[key]||""} placeholder={lbl+"..."} onChange={e=>updEtapa(prod.id,"investigacion",{[key]:e.target.value})}/>
+                    </div>
+                  ))}
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+                    {[["Precio Proveedor","precioProveedor"],["Valor Venta Est.","valorVenta"],["Cant. Proveedores","cantProveedores"]].map(([lbl,key])=>(
+                      <div key={key}><div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>{lbl}</div>
+                        <input style={SI({fontSize:12})} type="number" value={prod.investigacion?.[key]||""} onChange={e=>updEtapa(prod.id,"investigacion",{[key]:e.target.value})}/></div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:14}}>
+                <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                  <SH label="Links de Referencia"/>
+                  {[["Amazon","linkAmazon"],["Google Trends","linkTrends"],["AliExpress","linkAli"],["MercadoLibre","linkML"],["Links Competencia","linksComp"],["Links Videos","linksVideos"]].map(([lbl,key])=>(
+                    <div key={key} style={{marginBottom:10}}>
+                      <div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>{lbl}</div>
+                      <div style={{display:"flex",gap:6}}>
+                        <input style={SI({fontSize:12,flex:1})} value={prod.investigacion?.[key]||""} placeholder="https://..." onChange={e=>updEtapa(prod.id,"investigacion",{[key]:e.target.value})}/>
+                        {prod.investigacion?.[key]&&<a href={prod.investigacion[key]} target="_blank" rel="noreferrer" style={{...SG({padding:"0 10px",display:"flex",alignItems:"center",fontSize:14,textDecoration:"none"})}}>↗</a>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                  <SH label="Notas"/>
+                  <textarea style={SI({height:100,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.investigacion?.notas||""} placeholder="Observaciones, ideas..." onChange={e=>updEtapa(prod.id,"investigacion",{notas:e.target.value})}/>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ANÁLISIS */}
+          {prod.etapa==="analisis"&&(
+            <div style={{display:"grid",gridTemplateColumns:isMob?"1fr":"1fr 1fr",gap:14,alignItems:"start"}}>
+              <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                <SH label="Criterios de Análisis"/>
+                {[["Cantidad Proveedores","cantProv",["1","2","3","4+"]],["Competidores","cantComp",["1","Entre 2 y 3","Entre 4 y 6","Más de 6"]],["Catálogo Público","catalogo",["Si","No"]],["Puede Importar","importar",["Si","No"]],["Ticket","ticket",["Bajo","Medio","Alto"]],["Suple Necesidad","necesidad",["Si","No"]],["Efecto Wow","wow",["Si","No"]],["Anuncio Cautivador","cautivador",["Si","No"]],["Percepción Valor","percepcion",["Si","No"]],["Es Black","black",["Si","No"]]].map(([lbl,key,opts])=>(
+                  <div key={key} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 0",borderBottom:"1px solid "+P.border}}>
+                    <span style={{fontSize:12,color:P.mt}}>{lbl}</span>
+                    <select style={SI({width:"auto",padding:"4px 8px",fontSize:12})} value={prod.analisis?.[key]||opts[0]} onChange={e=>updEtapa(prod.id,"analisis",{[key]:e.target.value})}>
+                      {opts.map(o=><option key={o}>{o}</option>)}
+                    </select>
+                  </div>
+                ))}
+                <div style={{marginTop:10}}><div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>Necesidad que suple</div>
+                  <input style={SI({fontSize:12})} value={prod.analisis?.queNec||""} placeholder="Describe..." onChange={e=>updEtapa(prod.id,"analisis",{queNec:e.target.value})}/></div>
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:14}}>
+                <div style={{background:"#0a0900",border:"1px solid "+(si.color)+"44",borderRadius:14,padding:24,textAlign:"center"}}>
+                  <Ring pct={sc} color={si.color} size={130} stroke={12}/>
+                  <div style={{fontSize:14,color:si.color,fontWeight:700,marginTop:12}}>{si.label}</div>
+                </div>
+                <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                  <SH label="Prompt Análisis Profundo"/>
+                  <div style={{fontSize:11,color:P.mt,marginBottom:10,lineHeight:1.6}}>Copia y pega en ChatGPT para análisis completo COD Colombia.</div>
+                  <button style={SB({width:"100%",padding:"10px 0",fontSize:11})} onClick={()=>{
+                    const txt="ANÁLISIS ESTRATÉGICO — BITÁCORA PRO\nProducto: "+(prod.nombre)+"\nProblema: "+(prod.investigacion?.descripcion||"—")+"\nPor qué vender: "+(prod.investigacion?.porQueVender||"—")+"\nPrecio proveedor: "+(prod.investigacion?.precioProveedor||0)+"\nValor venta estimado: "+(prod.investigacion?.valorVenta||0)+"\nCant. proveedores: "+(prod.investigacion?.cantProveedores||1)+"\nCompetencia: "+(prod.analisis?.cantComp||"—")+"\nTicket: "+(prod.analisis?.ticket||"—")+"\nBuyer Persona: "+(prod.investigacion?.buyerPersona||"—")+"\nLinks competencia: "+(prod.investigacion?.linksComp||"—")+"\n\nEjecuta análisis completo COD Colombia Meta Ads con score de viabilidad, ángulos de venta, oferta recomendada, naming y recomendación final.";
+                    navigator.clipboard?.writeText(txt);setSaveMsg("✓ Copiado");setTimeout(()=>setSaveMsg(""),2000);
+                  }}>📋 Copiar Prompt de Análisis</button>
+                </div>
+                <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                  <SH label="Subir Análisis HTML/PDF"/>
+                  {prod.analisisFile?(
+                    <div style={{display:"flex",alignItems:"center",gap:10,padding:10,background:P.bg2,borderRadius:8,border:"1px solid "+P.green+"33"}}>
+                      <span style={{fontSize:20}}>📄</span>
+                      <span style={{fontSize:12,color:P.green,flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{prod.analisisFileName||"Análisis subido"}</span>
+                      <button onClick={()=>updProd(prod.id,{analisisFile:null,analisisFileName:""})} style={{background:"none",border:"none",color:P.mt,fontSize:16}}>×</button>
+                    </div>
+                  ):(
+                    <label style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:80,border:"2px dashed "+(P.border),borderRadius:10,cursor:"pointer",gap:6}}>
+                      <span style={{fontSize:24}}>📤</span>
+                      <span style={{fontSize:11,color:P.mt}}>Subir HTML o PDF</span>
+                      <input type="file" accept=".html,.pdf" style={{display:"none"}} onChange={e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>updProd(prod.id,{analisisFile:ev.target.result,analisisFileName:f.name});r.readAsDataURL(f);}}/>
+                    </label>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* CALCULADORA */}
+          {prod.etapa==="calculadora"&&(()=>{
+            const c=prod.calculadora||{},r=calcP(c);
+            return(
+              <div style={{display:"grid",gridTemplateColumns:isMob?"1fr":"1fr 1fr",gap:14,alignItems:"start"}}>
+                <div style={{display:"flex",flexDirection:"column",gap:14}}>
+                  <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                    <SH label="Parámetros"/>
+                    <div style={{marginBottom:12}}><div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>País</div>
+                      <select style={SI()} value={c.pais||"Colombia"} onChange={e=>updEtapa(prod.id,"calculadora",{pais:e.target.value})}>{PAISES.map(p=><option key={p}>{p}</option>)}</select></div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+                      {[["Utilidad %","util"],["Efectividad %","efect"],["CPA %","cpa"],["Cancelados %","canc"],["Impuestos %","tax"],["Precio Proveedor","proveedor"],["Costos Admin","admin"],["Fullfilment","fulfi"],["Precio Manual","manual"]].map(([lbl,key])=>(
+                        <div key={key}><div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>{lbl}</div>
+                          <input style={SI({fontSize:12,color:key==="manual"?P.gold:P.tx})} type="number" value={c[key]||0} onChange={e=>updEtapa(prod.id,"calculadora",{[key]:e.target.value})}/></div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div style={{display:"flex",flexDirection:"column",gap:14}}>
+                  <div style={{background:"#0a0900",border:"1px solid "+P.gold+"55",borderRadius:14,padding:24,textAlign:"center"}}>
+                    <div style={{fontSize:10,color:P.mt,letterSpacing:3,marginBottom:8,fontWeight:600}}>PRECIO SUGERIDO — {c.pais||"Colombia"}</div>
+                    <div style={{fontFamily:"'Poppins',sans-serif",fontSize:42,fontWeight:800,background:"linear-gradient(135deg,#C9956C,#E8C4A0)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>{COP(r.Ps)}</div>
+                    {+c.manual>0&&(<div style={{borderTop:"1px solid "+P.border,marginTop:14,paddingTop:14}}>
+                      <div style={{fontSize:10,color:P.mt,letterSpacing:2,marginBottom:6,fontWeight:600}}>PRECIO MANUAL</div>
+                      <div style={{fontSize:28,fontWeight:700,color:P.gold}}>{COP(+c.manual)}</div>
+                      <div style={{fontSize:13,color:r.um>=0?P.green:P.red,marginTop:4}}>Utilidad: {COP(r.um)}</div>
+                    </div>)}
+                  </div>
+                  <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                    <SH label="Desglose"/>
+                    {NR("Precio Proveedor",COP(r.pr))}{NR("Flete c/Devoluciones",COP(r.fd))}{NR("CPA Costeado",COP(r.cpc))}{NR("Impuestos",COP(r.imp))}{NR("Costos Totales",COP(r.cos))}{NR("Precio Sugerido",COP(r.Ps),true)}{NR("CPA Breakeven",COP(r.cbk),true)}{+c.manual>0&&NR("Utilidad Real",COP(r.um),true)}
+                  </div>
+                  <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                    <SH label="Ofertas de Cantidad"/>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+                      {[{lbl:"2 Uds -20%",d:r.o2},{lbl:"3 Uds -30%",d:r.o3}].map(({lbl,d})=>(
+                        <div key={lbl} style={{background:P.bg2,border:"1px solid "+P.border,borderRadius:10,padding:14}}>
+                          <div style={{fontSize:11,color:P.gold,fontWeight:700,marginBottom:8}}>{lbl}</div>
+                          {NR("Venta",COP(d.p))}
+                          <div style={{display:"flex",justifyContent:"space-between",paddingTop:6}}>
+                            <span style={{fontSize:12,color:P.mt}}>Utilidad</span>
+                            <span style={{fontSize:14,color:d.u>=0?P.green:P.red,fontWeight:700}}>{COP(d.u)}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* OFERTA */}
+          {prod.etapa==="oferta"&&(
+            <div style={{display:"grid",gridTemplateColumns:isMob?"1fr":"1fr 1fr",gap:14}}>
+              <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                <SH label="Estructura de Oferta"/>
+                {[["Precio 1 Unidad","precio1"],["Precio 2 Unidades","precio2"],["Precio 3 Unidades","precio3"],["Bundle","bundle"],["Garantía","garantia"],["Bonus Digital","bonus"],["Upsell","upsell"],["Urgencia","urgencia"]].map(([lbl,key])=>(
+                  <div key={key} style={{marginBottom:10}}>
+                    <div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>{lbl}</div>
+                    <input style={SI({fontSize:12})} value={prod.oferta?.[key]||""} placeholder={lbl+"..."} onChange={e=>updEtapa(prod.id,"oferta",{[key]:e.target.value})}/>
+                  </div>
+                ))}
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:14}}>
+                <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                  <SH label="Notas de Oferta"/>
+                  <textarea style={SI({height:180,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.oferta?.notas||""} placeholder="Estrategia, observaciones..." onChange={e=>updEtapa(prod.id,"oferta",{notas:e.target.value})}/>
+                </div>
+                <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                  <SH label="Prompt Oferta COD"/>
+                  <button style={SB({width:"100%",padding:"10px 0",fontSize:11})} onClick={()=>{
+                    const txt="OFERTA COD COLOMBIA — BITÁCORA PRO\nProducto: "+(prod.nombre)+"\nPrecio proveedor: "+(prod.investigacion?.precioProveedor||0)+"\nValor venta: "+(prod.investigacion?.valorVenta||0)+"\nMercado: Colombia COD Meta Ads\n\nGenera oferta completa: precios x1/x2/x3, bundle, garantía en días, bonus digital con título, upsell, urgencia real y justificación de cada elemento.";
+                    navigator.clipboard?.writeText(txt);setSaveMsg("✓ Copiado");setTimeout(()=>setSaveMsg(""),2000);
+                  }}>📋 Copiar Prompt Oferta</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* DESARROLLO */}
+          {prod.etapa==="desarrollo"&&(
+            <div>
+              <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:20,flexWrap:"wrap"}}>
+                <Ring pct={devPct} color={devPct===100?P.green:devPct>=50?P.gold:P.red} size={64} stroke={7}/>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:16,fontWeight:700,color:P.tx}}>{devDone}/{DEV_STEPS.length} pasos completados</div>
+                  <div style={{fontSize:12,color:P.mt,marginTop:2}}>{DEV_STEPS.length-devDone} pasos restantes</div>
+                  <div style={{height:4,background:P.card2,borderRadius:2,marginTop:8}}>
+                    <div style={{height:4,borderRadius:2,background:devPct===100?P.green:"linear-gradient(90deg,"+(P.gold)+","+(P.gold2)+")",width:(devPct)+"%",transition:"width .6s"}}/>
+                  </div>
+                </div>
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                {DEV_STEPS.map((s,i)=>{
+                  const step=prod.desarrollo?.steps?.[s.key]||{done:false,subs:{}};
+                  const subsDone=Object.values(step.subs||{}).filter(Boolean).length;
+                  const subsTotal=(s.subs||[]).length;
+                  const allDone=subsTotal>0&&subsDone===subsTotal;
+                  const stepOpen=step.open||false;
+                  return(
+                    <div key={s.key} style={{background:allDone?"#0a1a0a":step.done?"#0f1a0a":P.card,border:"1px solid "+(allDone?"#4dba7f55":step.done?"#4dba7f33":P.border),borderRadius:12,overflow:"hidden",transition:"all .2s"}}>
+                      {/* Header acordeón */}
+                      <div style={{display:"flex",alignItems:"center",gap:10,padding:"13px 16px",cursor:"pointer",userSelect:"none"}}
+                        onClick={()=>setProductos(prev=>prev.map(p=>p.id===prod.id?{...p,desarrollo:{...p.desarrollo,steps:{...p.desarrollo.steps,[s.key]:{...step,open:!stepOpen}}}}:p))}>
+                        {/* Check principal */}
+                        <div onClick={e=>{e.stopPropagation();const nd=!step.done;const ns=Object.fromEntries((s.subs||[]).map(sb=>[sb,nd]));setProductos(prev=>prev.map(p=>p.id===prod.id?{...p,desarrollo:{...p.desarrollo,steps:{...p.desarrollo.steps,[s.key]:{...step,done:nd,subs:ns}}}}:p));}}
+                          style={{width:22,height:22,borderRadius:5,background:allDone?P.green:step.done?"#2a6a3a":"transparent",border:"2px solid "+(allDone?P.green:step.done?"#4dba7f":P.border),display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,transition:"all .2s",zIndex:1}}>
+                          {(allDone||step.done)&&<span style={{color:"#080400",fontSize:12,fontWeight:900}}>✓</span>}
+                        </div>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{fontSize:9,color:allDone?P.green:step.done?P.green:P.mt,letterSpacing:1,fontWeight:600,marginBottom:2}}>PASO {i+1}</div>
+                          <div style={{fontSize:13,color:allDone?P.green:step.done?P.tx:P.tx,fontWeight:600,textDecoration:(allDone||step.done)?"line-through":"none"}}>{s.label}</div>
+                        </div>
+                        {/* Progress mini */}
+                        <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
+                          <div style={{display:"flex",gap:3}}>
+                            {(s.subs||[]).map((_,si)=>(
+                              <div key={si} style={{width:6,height:6,borderRadius:"50%",background:si<subsDone?P.green:P.border,transition:"background .2s"}}/>
+                            ))}
+                          </div>
+                          <span style={{fontSize:10,color:allDone?P.green:P.mt,minWidth:28,fontWeight:allDone?700:400}}>{subsDone}/{subsTotal}</span>
+                          <span style={{color:P.mt,fontSize:12,transition:"transform .2s",display:"inline-block",transform:stepOpen?"rotate(180deg)":"rotate(0deg)"}}>▾</span>
+                        </div>
+                      </div>
+                      {/* Sub-ítems acordeón */}
+                      {stepOpen&&(
+                        <div style={{borderTop:"1px solid "+P.border,padding:"10px 16px 14px",background:"#0a0a08"}}>
+                          {(s.subs||[]).map(sub=>{
+                            const sd=step.subs?.[sub]||false;
+                            return(
+                              <div key={sub} onClick={()=>{
+                                setProductos(prev=>prev.map(p=>{
+                                  if(p.id!==prod.id)return p;
+                                  const ns={...(p.desarrollo?.steps?.[s.key]?.subs||{}),[sub]:!sd};
+                                  const ad=Object.values(ns).every(Boolean);
+                                  return{...p,desarrollo:{...p.desarrollo,steps:{...p.desarrollo.steps,[s.key]:{...p.desarrollo.steps[s.key],done:ad,subs:ns}}}};
+                                }));
+                              }} style={{display:"flex",alignItems:"center",gap:10,padding:"7px 0",cursor:"pointer",borderBottom:"1px solid "+(P.border)+"22"}}>
+                                <div style={{width:16,height:16,borderRadius:4,background:sd?P.green:"transparent",border:"1.5px solid "+(sd?P.green:P.mt2),display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,transition:"all .2s"}}>
+                                  {sd&&<span style={{color:"#080400",fontSize:10,fontWeight:900}}>✓</span>}
+                                </div>
+                                <span style={{fontSize:12,color:sd?P.green:P.mt,textDecoration:sd?"line-through":"none",transition:"all .2s"}}>{sub}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* CREATIVOS */}
+          {prod.etapa==="creativos"&&(
+            <div style={{display:"grid",gridTemplateColumns:isMob?"1fr":"1fr 1fr",gap:14}}>
+              <div style={{display:"flex",flexDirection:"column",gap:14}}>
+                <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                  <SH label="Ángulos de Venta"/>
+                  <textarea style={SI({height:120,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.creativos?.angulos||""} placeholder="1. Emocional — ...\n2. Testimonio — ...\n3. Comparación — ..." onChange={e=>updEtapa(prod.id,"creativos",{angulos:e.target.value})}/>
+                </div>
+                <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                  <SH label="Guión / Script"/>
+                  <textarea style={SI({height:200,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.creativos?.guion||""} placeholder="Pega aquí el guión generado en ChatGPT..." onChange={e=>updEtapa(prod.id,"creativos",{guion:e.target.value})}/>
+                </div>
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:14}}>
+                <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                  <SH label="Prompts de Imagen/Video"/>
+                  <textarea style={SI({height:150,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.creativos?.prompts||""} placeholder="Pega aquí los prompts generados..." onChange={e=>updEtapa(prod.id,"creativos",{prompts:e.target.value})}/>
+                </div>
+                <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                  <SH label="Prompt Creativos"/>
+                  <button style={SB({width:"100%",padding:"10px 0",fontSize:11,marginBottom:10})} onClick={()=>{
+                    const txt="CREATIVOS — BITÁCORA PRO\nProducto: "+(prod.nombre)+"\nDescripción: "+(prod.investigacion?.descripcion||"—")+"\nBuyer Persona: "+(prod.investigacion?.buyerPersona||"—")+"\nÁngulos: "+(prod.creativos?.angulos||"Beneficio, Testimonio, Emocional, Comparación, Validación")+"\nPrecio: "+(COP(+prod.investigacion?.valorVenta||0))+"\nMercado: Colombia COD Meta Ads\n\nPor cada ángulo: 5 hooks agresivos que toquen el punto de dolor. Luego por ángulo elegido: guión completo UGC + voz en off con fases (Scrollstopper 2-3s, Presentación 2-3s, Características 6-8s, Modo de uso 10-12s, CTA 2-4s) + texto de pantalla complementario (NO repite voz en off) + escenas sugeridas cinematográficas + tags ElevenLabs v3.";
+                    navigator.clipboard?.writeText(txt);setSaveMsg("✓ Copiado");setTimeout(()=>setSaveMsg(""),2000);
+                  }}>📋 Copiar Prompt Creativos</button>
+                  <SH label="Notas"/>
+                  <textarea style={SI({height:80,resize:"vertical",lineHeight:1.6,fontSize:12})} value={prod.creativos?.notas||""} placeholder="Notas adicionales..." onChange={e=>updEtapa(prod.id,"creativos",{notas:e.target.value})}/>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* CAMPAÑA */}
+          {prod.etapa==="campana"&&(()=>{
+            const inv=+prod.campana?.inversion||0,ing=+prod.campana?.ingresos||0;
+            const costoDropi=+prod.campana?.costoDropi||0;
+            const profit=ing-inv-costoDropi;
+            const roas=inv>0?ing/inv:0;
+            const alertas=[];
+            if((+prod.campana?.cpa||0)>50000)alertas.push({t:"CPA Alto — revisar segmentación",c:P.red});
+            if((+prod.campana?.cpm||0)>30000)alertas.push({t:"CPM Alto — revisar creativos",c:P.red});
+            if((+prod.campana?.ctr||0)<1&&(+prod.campana?.ctr||0)>0)alertas.push({t:"CTR Bajo — cambiar hook",c:"#f97316"});
+            return(
+              <div style={{display:"grid",gridTemplateColumns:isMob?"1fr":"1fr 1fr",gap:14}}>
+                <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                  <SH label="Datos de Campaña"/>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+                    {[["Fecha","fecha","date"],["Inversión Ads","inversion","number"],["Ingresos Dropi","ingresos","number"],["Costo Dropi (opcional)","costoDropi","number"],["Ventas","ventas","number"],["CPA","cpa","number"],["CTR %","ctr","number"],["CPM","cpm","number"]].map(([lbl,key,type])=>(
+                      <div key={key}><div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>{lbl}</div>
+                        <input style={SI({fontSize:12})} type={type} value={prod.campana?.[key]||""} onChange={e=>updEtapa(prod.id,"campana",{[key]:e.target.value})}/></div>
+                    ))}
+                  </div>
+                  <div style={{marginTop:10}}>
+                    <div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>Estado</div>
+                    <select style={SI({fontSize:12,color:EST_COL[prod.campana?.estado]||P.gold})} value={prod.campana?.estado||"Testeando"} onChange={e=>updEtapa(prod.id,"campana",{estado:e.target.value})}>
+                      {["Testeando","Activa","Escalando","Pausada","Finalizada"].map(s=><option key={s}>{s}</option>)}
+                    </select>
+                  </div>
+                  <div style={{fontSize:10,color:P.mt,marginTop:10,lineHeight:1.5,background:P.bg2,borderRadius:8,padding:"8px 10px"}}>
+                    💡 <b>Profit = Ingresos Dropi − Inversión Ads{costoDropi>0?" − Costo Dropi":""}</b><br/>
+                    Dropi ya descuenta el costo del producto antes de pagarte. Solo agrega "Costo Dropi" si quieres ver el profit incluyendo lo que pagaste a Dropi.
+                  </div>
+                </div>
+                <div style={{display:"flex",flexDirection:"column",gap:14}}>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+                    {[{l:"Inversión",v:COP(inv),c:P.mt},{l:"Ingresos",v:COP(ing),c:P.gold},{l:"Profit",v:COP(profit),c:profit>=0?P.green:P.red},{l:"ROAS",v:roas.toFixed(2)+"x",c:roas>=2?P.green:roas>=1?P.gold:P.red}].map(({l,v,c})=>(
+                      <div key={l} style={{background:P.bg2,borderRadius:10,padding:"12px 14px",border:"1px solid "+P.border}}>
+                        <div style={{fontSize:9,color:P.mt,letterSpacing:1,textTransform:"uppercase",fontWeight:600,marginBottom:6}}>{l}</div>
+                        <div style={{fontSize:20,fontWeight:700,color:c}}>{v}</div>
+                      </div>
+                    ))}
+                  </div>
+                  {alertas.length>0&&(
+                    <div style={{background:"#1a0808",border:"1px solid "+P.red+"33",borderRadius:12,padding:14}}>
+                      <div style={{fontSize:10,color:P.red,letterSpacing:1.5,marginBottom:8,textTransform:"uppercase",fontWeight:600}}>⚠ Alertas</div>
+                      {alertas.map(a=><div key={a.t} style={{fontSize:12,color:a.c,marginBottom:4}}>• {a.t}</div>)}
+                    </div>
+                  )}
+                  <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:14,padding:18}}>
+                    <SH label="Notas de Campaña"/>
+                    <textarea style={SI({height:120,resize:"vertical",lineHeight:1.7,fontSize:12})} value={prod.campana?.notas||""} placeholder="Aprendizajes, próximos pasos..." onChange={e=>updEtapa(prod.id,"campana",{notas:e.target.value})}/>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Nav etapas */}
+          <div style={{display:"flex",gap:10,marginTop:24,justifyContent:"space-between"}}>
+            <button style={SG({padding:"9px 20px",fontSize:12,opacity:etapaIdx===0?.3:1})} onClick={()=>etapaIdx>0&&updProd(prod.id,{etapa:ETAPAS[etapaIdx-1].id})}>← Anterior</button>
+            <button style={SB({padding:"9px 24px",fontSize:12,opacity:etapaIdx===ETAPAS.length-1?.3:1})} onClick={()=>etapaIdx<ETAPAS.length-1&&updProd(prod.id,{etapa:ETAPAS[etapaIdx+1].id})}>Siguiente →</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ════════ LISTA PRODUCTOS ════════ */
+  // M3 Trafficker
   const[periodo,setPeriodo]=useState("mes");
   const[fechaUnica,setFechaUnica]=useState(todayStr());
   const[vistaTab,setVistaTab]=useState("dashboard");
   const[vistaCamps,setVistaCamps]=useState("periodo");
   const[showForm,setShowForm]=useState(false);
   const[editCamp,setEditCamp]=useState(null);
+  const[confirmDel,setConfirmDel]=useState(null);
   const[notasMes,setNotasMes]=useState("");
   const[dropiData,setDropiData]=useState(null);
   const[metaData,setMetaData]=useState(null);
   const[importMsg,setImportMsg]=useState("");
-  const saveRef=useRef(null);
 
 
-  // M4 state
+
+  useEffect(()=>{
+    if(!user||screen!=="app")return;
+    clearTimeout(saveRef.current);
+    saveRef.current=setTimeout(()=>DB.set("camps:"+(user.name),camps),1500);
+  },[camps,user,screen]);
+
+  const doSave=async(silent=false)=>{
+    if(!silent)setSaveMsg("guardando...");
+    if(user){
+      await DB.set("camps:"+(user.name),camps);
+      await DB.set("campnotes:"+(user.name),notasMes);
+      if(dropiData)await DB.set("dropidata:"+(user.name),dropiData);
+      if(metaData)await DB.set("metadata:"+(user.name),metaData);
+    }
+    if(!silent){setSaveMsg("✓ Guardado");setTimeout(()=>setSaveMsg(""),2000);}
+  };
+
+
+  /* ── IMPORTAR META ── */
+  const importMeta=async(file)=>{
+    setImportMsg("Procesando Meta Ads...");
+    try{
+      let rows=[];
+      if(file.name.endsWith(".csv")){
+        const text=await file.text();
+        const result=Papa.parse(text,{header:true,skipEmptyLines:true});
+        rows=result.data;
+      }else{
+        const ab=await file.arrayBuffer();
+        const wb=XLSX.read(ab);
+        const ws=wb.Sheets[wb.SheetNames[0]];
+        rows=XLSX.utils.sheet_to_json(ws);
+      }
+      const parsed=parseMetaRows(rows);
+      setMetaData({filas:parsed,archivo:file.name,fecha:todayStr(),totalRows:rows.length});
+      await DB.set("metadata:"+(user.name),{filas:parsed,archivo:file.name,fecha:todayStr(),totalRows:rows.length});
+      setImportMsg("✓ Meta: "+(parsed.length)+" campañas importadas");
+      setTimeout(()=>setImportMsg(""),3000);
+    }catch(e){setImportMsg("Error al procesar: "+e.message);setTimeout(()=>setImportMsg(""),4000);}
+  };
+
+  /* ── IMPORTAR DROPI ── */
+  const importDropi=async(file)=>{
+    setImportMsg("Procesando Dropi...");
+    try{
+      let rows=[];
+      if(file.name.endsWith(".csv")){
+        const text=await file.text();
+        const result=Papa.parse(text,{header:true,skipEmptyLines:true});
+        rows=result.data;
+      }else{
+        const ab=await file.arrayBuffer();
+        const wb=XLSX.read(ab);
+        const ws=wb.Sheets[wb.SheetNames[0]];
+        rows=XLSX.utils.sheet_to_json(ws);
+      }
+      const parsed=parseDropiRows(rows);
+      setDropiData({...parsed,archivo:file.name,fechaImport:todayStr()});
+      await DB.set("dropidata:"+(user.name),{...parsed,archivo:file.name,fechaImport:todayStr()});
+      setImportMsg("✓ Dropi: "+(parsed.totalPedidos)+" pedidos — "+(parsed.entregado)+" entregados");
+      setTimeout(()=>setImportMsg(""),3000);
+    }catch(e){setImportMsg("Error al procesar: "+e.message);setTimeout(()=>setImportMsg(""),4000);}
+  };
+
+  /* ── MÉTRICAS MANUALES ── */
+  const campsActivas=useMemo(()=>filtrarPeriodo(camps,periodo,fechaUnica),[camps,periodo,fechaUnica]);
+  const campsProdVista=useMemo(()=>selProd==="Todos"?camps:camps.filter(c=>c.producto===selProd),[camps,selProd]);
+  const campsTabla=vistaCamps==="periodo"?campsActivas:campsProdVista;
+
+  const M=useMemo(()=>{
+    const cs=campsActivas;
+    const inv=cs.reduce((a,c)=>a+(+c.inversion||0),0);
+    const ing=cs.reduce((a,c)=>a+(+c.ingresos||0),0);
+    const ven=cs.reduce((a,c)=>a+(+c.ventas||0),0);
+    const drop=cs.reduce((a,c)=>a+(+c.costoDropi||0),0);
+    const profit=ing-inv-drop;
+    const roas=inv>0?ing/inv:0;
+    const wCtr=cs.filter(c=>+c.ctr>0);
+    const wCpm=cs.filter(c=>+c.cpm>0);
+    const wCpa=cs.filter(c=>+c.cpa>0);
+    const ctr=wCtr.length?wCtr.reduce((a,c)=>a+(+c.ctr),0)/wCtr.length:0;
+    const cpm=wCpm.length?wCpm.reduce((a,c)=>a+(+c.cpm),0)/wCpm.length:0;
+    const cpa=wCpa.length?wCpa.reduce((a,c)=>a+(+c.cpa),0)/wCpa.length:0;
+    // pérdidas: campañas con ingresos=0 o profit negativo
+    const perdidas=cs.filter(c=>(+c.ingresos||0)===0&&(+c.inversion||0)>0);
+    const dinPerdido=perdidas.reduce((a,c)=>a+(+c.inversion||0),0);
+    const campsPerdida=cs.filter(c=>(+c.ingresos||0)-(+c.inversion||0)-(+c.costoDropi||0)<0);
+    const byProd={};
+    cs.forEach(c=>{if(!c.producto)return;if(!byProd[c.producto])byProd[c.producto]={inv:0,ing:0,profit:0,ven:0};const p=byProd[c.producto];p.inv+=+c.inversion||0;p.ing+=+c.ingresos||0;p.profit+=(+c.ingresos||0)-(+c.inversion||0)-(+c.costoDropi||0);p.ven+=+c.ventas||0;});
+    const byCuenta={};
+    cs.forEach(c=>{if(!c.cuenta)return;if(!byCuenta[c.cuenta])byCuenta[c.cuenta]={inv:0,ing:0,n:0};byCuenta[c.cuenta].inv+=+c.inversion||0;byCuenta[c.cuenta].ing+=+c.ingresos||0;byCuenta[c.cuenta].n++;});
+    const alertas=[];
+    cs.forEach(c=>{
+      if((+c.cpa||0)>45000)alertas.push({camp:c.campana||c.producto,tipo:"CPA Alto",val:COP(+c.cpa),color:P.red});
+      if((+c.cpm||0)>28000)alertas.push({camp:c.campana||c.producto,tipo:"CPM Alto",val:COP(+c.cpm),color:P.orange});
+      if((+c.ctr||0)>0&&(+c.ctr||0)<1.5)alertas.push({camp:c.campana||c.producto,tipo:"CTR Bajo",val:PCT(+c.ctr),color:P.orange});
+      if((+c.ingresos||0)===0&&(+c.inversion||0)>0)alertas.push({camp:c.campana||c.producto,tipo:"Sin Ventas",val:COP(+c.inversion)+" perdido",color:P.red});
+    });
+    const byFecha={};
+    cs.forEach(c=>{if(!byFecha[c.fecha])byFecha[c.fecha]={ing:0};byFecha[c.fecha].ing+=+c.ingresos||0;});
+    const chart=Object.entries(byFecha).sort((a,b)=>a[0].localeCompare(b[0])).slice(-10).map(([f,v])=>({l:f.slice(5),v:v.ing}));
+    return{inv,ing,ven,drop,profit,roas,ctr,cpm,cpa,activas:cs.filter(c=>c.estado==="Activa"||c.estado==="Escalando").length,total:cs.length,byProd,byCuenta,alertas,chart,perdidas,dinPerdido,campsPerdida};
+  },[campsActivas]);
+
+  const productos=useMemo(()=>["Todos",...new Set(camps.map(c=>c.producto).filter(Boolean))],[camps]);
+
+  /* ── LOADING ── */
+  if(screen==="loading")return(
+    <div style={{background:P.bg,minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:20}}>
+      <style>{CSS}</style>
+      <div className="pulse" style={{fontFamily:"'Poppins',sans-serif",fontSize:36,fontWeight:800}}><GT>BITÁCORA PRO</GT></div>
+      <div style={{display:"flex",gap:6}}>{[0,1,2].map(i=><div key={i} style={{width:5,height:5,borderRadius:"50%",background:P.gold,animation:"pulse 1.4s ease-in-out "+(i*0.2)+"s infinite"}}/>)}</div>
+    </div>
+  );
+
+  if(screen==="auth")return(
+    <div style={{background:P.bg,minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+      <style>{CSS}</style>
+      <div style={{width:"100%",maxWidth:400}} className="anim">
+        <div style={{textAlign:"center",marginBottom:36}}>
+          <div style={{fontSize:9,color:P.mt2,letterSpacing:5,textTransform:"uppercase",marginBottom:10,fontWeight:300}}>estefani horta</div>
+          <h1 style={{fontFamily:"'Poppins',sans-serif",fontSize:48,fontWeight:800,lineHeight:1,margin:0}}><GT>BITÁCORA</GT></h1>
+          <h1 style={{fontFamily:"'Poppins',sans-serif",fontSize:48,fontWeight:300,lineHeight:1,color:P.tx,margin:0}}>PRO</h1>
+        </div>
+        <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:16,padding:28}}>
+          <div style={{display:"flex",flexDirection:"column",gap:14}}>
+            <div><div style={{fontSize:9,letterSpacing:2,color:P.mt,marginBottom:6,textTransform:"uppercase",fontWeight:600}}>Usuario</div><input style={SI()} value={uname} onChange={e=>setUname(e.target.value)} placeholder="tu_usuario" onKeyDown={e=>e.key==="Enter"&&doAuth()} autoCapitalize="none"/></div>
+            <div><div style={{fontSize:9,letterSpacing:2,color:P.mt,marginBottom:6,textTransform:"uppercase",fontWeight:600}}>Contraseña</div><input style={SI()} type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="••••••••" onKeyDown={e=>e.key==="Enter"&&doAuth()}/></div>
+            {err&&<div style={{background:"#1e0808",border:"1px solid #5a181844",borderRadius:8,padding:"10px 14px",color:"#f08888",fontSize:12}}>{err}</div>}
+            <button style={SB({width:"100%",padding:"13px 0",fontSize:12,marginTop:4})} onClick={doAuth} disabled={busy}>{busy?<span className="pulse">▪ ▪ ▪</span>:isReg?"CREAR CUENTA":"ENTRAR"}</button>
+          </div>
+          <div style={{textAlign:"center",marginTop:18,fontSize:12,color:P.mt}}>
+            {isReg?"¿Ya tienes cuenta? ":"¿Primera vez? "}
+            <span style={{color:P.gold,cursor:"pointer",fontWeight:600}} onClick={()=>{setIsReg(!isReg);setErr("");}}>{isReg?"Inicia sesión":"Regístrate"}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // M4 Creativos
   const[fuenteProd,setFuenteProd]=useState("analizado");
   const[prodSelId,setProdSelId]=useState("p1");
   const[prodLibre,setProdLibre]=useState({id:"libre",nombre:"",descripcion:"",problema:"",buyerPersona:"",precioAntes:"",precioAhora:"",paleta:"",pais:"Colombia",anguloPpal:"",precioProveedor:0});
@@ -515,111 +1168,109 @@ export default function App(){
   const[comparacion,setComparacion]=useState("");
   const[hookSel,setHookSel]=useState("");
   const[angSel,setAngSel]=useState("Emocional");
-  const[savedR,setSavedR]=useState({});
   const[saveMsg2,setSaveMsg2]=useState("");
 
-  // M5 state
+  useEffect(()=>{if(!user)return;clearTimeout(saveRef.current);saveRef.current=setTimeout(()=>DB.set("m4s:"+(user.name),savedR),2000);},[savedR]);
+  const doSave=async(silent=false)=>{if(!silent)setSaveMsg("guardando...");if(user)await DB.set("m4s:"+(user.name),savedR);if(!silent){setSaveMsg("✓ Guardado");setTimeout(()=>setSaveMsg(""),2000);}};
+  const RB=({k,ph="Pega aquí el resultado de ChatGPT...",h=100})=>(<div style={{marginTop:10,background:(P.green)+"08",border:"1px solid "+(P.green)+"22",borderRadius:10,padding:12}}><div style={{fontSize:9,color:P.green,letterSpacing:1,textTransform:"uppercase",fontWeight:600,marginBottom:5}}>💾 Guardar Resultado</div><textarea style={SI({height:h,resize:"vertical",lineHeight:1.7,fontSize:12})} value={savedR[k]||""} placeholder={ph} onChange={e=>sv(k,e.target.value)}/><div style={{display:"flex",justifyContent:"flex-end",gap:6,marginTop:5}}>{savedR[k]&&<CopyBtn text={savedR[k]} small/>}<button style={SB({padding:"4px 12px",fontSize:10})} onClick={()=>doSave()}>💾</button></div></div>);
+
+  if(screen==="loading")return(<div style={{background:P.bg,minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:20}}><style>{CSS}</style><div className="pulse" style={{fontFamily:"'Poppins',sans-serif",fontSize:36,fontWeight:800}}><GT>BITÁCORA PRO</GT></div><div style={{display:"flex",gap:6}}>{[0,1,2].map(i=><div key={i} style={{width:5,height:5,borderRadius:"50%",background:P.gold,animation:"pulse 1.4s ease-in-out "+(i*0.2)+"s infinite"}}/>)}</div></div>);
+  if(screen==="auth")return(<div style={{background:P.bg,minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",padding:20}}><style>{CSS}</style><div style={{width:"100%",maxWidth:400}} className="anim"><div style={{textAlign:"center",marginBottom:36}}><div style={{fontSize:9,color:P.mt2,letterSpacing:5,textTransform:"uppercase",marginBottom:10,fontWeight:300}}>estefani horta</div><h1 style={{fontFamily:"'Poppins',sans-serif",fontSize:48,fontWeight:800,lineHeight:1,margin:0}}><GT>BITÁCORA</GT></h1><h1 style={{fontFamily:"'Poppins',sans-serif",fontSize:48,fontWeight:300,lineHeight:1,color:P.tx,margin:0}}>PRO</h1></div><div style={{background:P.card,border:"1px solid "+P.border,borderRadius:16,padding:28}}><div style={{display:"flex",flexDirection:"column",gap:14}}><div><div style={{fontSize:9,letterSpacing:2,color:P.mt,marginBottom:6,textTransform:"uppercase",fontWeight:600}}>Usuario</div><input style={SI()} value={uname} onChange={e=>setUname(e.target.value)} placeholder="tu_usuario" onKeyDown={e=>e.key==="Enter"&&doAuth()} autoCapitalize="none"/></div><div><div style={{fontSize:9,letterSpacing:2,color:P.mt,marginBottom:6,textTransform:"uppercase",fontWeight:600}}>Contraseña</div><input style={SI()} type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="••••••••" onKeyDown={e=>e.key==="Enter"&&doAuth()}/></div>{err&&<div style={{background:"#1e0808",border:"1px solid #5a181844",borderRadius:8,padding:"10px 14px",color:"#f08888",fontSize:12}}>{err}</div>}<button style={SB({width:"100%",padding:"13px 0",fontSize:12,marginTop:4})} onClick={doAuth} disabled={busy}>{busy?<span className="pulse">▪ ▪ ▪</span>:isReg?"CREAR CUENTA":"ENTRAR"}</button></div><div style={{textAlign:"center",marginTop:18,fontSize:12,color:P.mt}}>{isReg?"¿Ya tienes cuenta? ":"¿Primera vez? "}<span style={{color:P.gold,cursor:"pointer",fontWeight:600}} onClick={()=>{setIsReg(!isReg);setErr("");}}>{isReg?"Inicia sesión":"Regístrate"}</span></div></div></div></div>);
+
+  const prodCreativo=fuenteProd==="analizado"?(productos.find(p=>p.id===prodSelId)||productos[0]):prodLibre;
+  // M5 Metricas
 
   // Métricas
 
   // Tiendas
-  const[editTienda,setEditTienda]=useState(null);
-  const[showTiendaForm,setShowTiendaForm]=useState(false);
 
   // Gastos
-  const[editGasto,setEditGasto]=useState(null);
-  const[showGastoForm,setShowGastoForm]=useState(false);
 
   // Aprendizajes
-  const[editAprend,setEditAprend]=useState(null);
-  const[showAprendForm,setShowAprendForm]=useState(false);
-  const[filtroTipo,setFiltroTipo]=useState("Todos");
 
   // Admin
-  const[usuarios,setUsuarios]=useState([]);
-  const[newUser,setNewUser]=useState({uname:"",pass:"",role:"user",secciones:Object.fromEntries(SECCIONES_ADMIN.map(s=>[s,true]))});
-  const[adminMsg,setAdminMsg]=useState("");
 
   // Nota flotante
 
   // Calc flotante
+  const[calcVal,setCalcVal]=useState("");
   const[calcHist,setCalcHist]=useState([]);
 
 
 
+
   useEffect(()=>{
-    return()=>window.removeEventListener("resize",r);
-  },[]);
-  },[]);
-    const u=uname.trim().toLowerCase().replace(/[\s/'"]+/g,"_");
-    if(!u||!pass){setErr("Completa todos los campos");setBusy(false);return;}
-    if(isReg){
-      if(!nombre.trim()){setErr("Ingresa tu nombre");setBusy(false);return;}
-      if(pass.length<4){setErr("Minimo 4 caracteres");setBusy(false);return;}
-      const ex=await DB.get("u:"+u);
-      if(ex){setErr("Usuario ya existe");setBusy(false);return;}
-      const nc=(nombre.trim()+" "+apellido.trim()).trim();
-      const ud={ph:hash(pass),role:"admin",active:true,nc};
-      await DB.set("u:"+u,ud);
-      await DB.set("session:active",{u,ph:hash(pass)});
-      await DB.set("session:lastuser",{u});
-      setUser({name:u,ph:hash(pass),role:"admin",nc});
-      setScreen("app");
-    }else{
-      const ud=await DB.get("u:"+u);
-      if(!ud){setErr("Usuario no encontrado");setBusy(false);return;}
-      if(ud.ph!==hash(pass)){setErr("Contrasena incorrecta");setBusy(false);return;}
-      if(ud.active===false){setErr("Cuenta desactivada");setBusy(false);return;}
-      await DB.set("session:active",{u,ph:ud.ph});
-      await DB.set("session:lastuser",{u});
-      setUser({name:u,ph:ud.ph,role:ud.role||"user",secciones:ud.secciones||null,nc:ud.nc||u});
-      const c=await DB.get("camps:"+u)||[];setCamps(c);
-      const p=await DB.get("productos:"+u)||[];setProductos(p);
-      const t=await DB.get("tiendas:"+u)||[];setTiendas(t);
-      const g=await DB.get("gastos:"+u)||[];setGastos(g);
-      const a=await DB.get("aprend:"+u)||[];setAprend(a);
-      setNoteText(await DB.get("floatnote:"+u)||"");
-      const m4s=await DB.get("m4s:"+u)||{};setSavedR(m4s);
-      if(ud.role==="admin"){const all=await DB.get("admin:usuarios")||[];setUsuarios(all);}
-      setScreen("app");
-    }
-    setBusy(false);
-  };
-    setUser(null);setScreen("auth");setUname("");setPass("");
-    setNombre("");setApellido("");setMenuOpen(false);
-  };
+    if(!user||screen!=="app")return;
+    clearTimeout(saveRef.current);
+    saveRef.current=setTimeout(()=>{
+      DB.set("tiendas:"+user.name,tiendas);
+      DB.set("gastos:"+user.name,gastos);
+      DB.set("aprend:"+user.name,aprend);
+      DB.set("floatnote:"+user.name,noteText);
+    },2000);
+  },[tiendas,gastos,aprend,noteText,user,screen]);
+
   const doSave=async(silent=false)=>{
     if(!silent)setSaveMsg("guardando...");
     if(user){
-      await DB.set("camps:"+user.name,camps);
-      await DB.set("productos:"+user.name,productos);
       await DB.set("tiendas:"+user.name,tiendas);
       await DB.set("gastos:"+user.name,gastos);
       await DB.set("aprend:"+user.name,aprend);
       await DB.set("floatnote:"+user.name,noteText);
-      await DB.set("m4s:"+user.name,savedR);
     }
-    if(!silent){setSaveMsg("Guardado");setTimeout(()=>setSaveMsg(""),2000);}
+    if(!silent){setSaveMsg("✓ Guardado");setTimeout(()=>setSaveMsg(""),2000);}
   };
 
 
-  const MODS=[
-    {id:"trafficker",icon:"📊",label:"Trafficker",desc:"Campanas Meta Ads",color:P.green},
-    {id:"creativos",icon:"🎨",label:"Creativos",desc:"Prompts y guiones",color:P.purple},
-    {id:"metricas",icon:"📈",label:"Metricas",desc:"Salud del negocio",color:P.orange},
-  ];
-  const fn=user&&user.nc?user.nc:(user&&user.name?user.name:"");
-  const firstName=fn.split(" ")[0]||fn;
+  const canAccess=(sec)=>{
+    if(!user)return false;
+    if(user.role==="admin")return true;
+    if(!user.secciones)return true;
+    return user.secciones[sec]!==false;
+  };
 
+  /* ── TABS ── */
+  const TABS=[
+    {id:"metricas",l:"📈 Métricas",sec:"Métricas"},
+    {id:"tiendas",l:"🏪 Tiendas",sec:"Tiendas"},
+    {id:"gastos",l:"💸 Gastos Fijos",sec:null},
+    {id:"aprend",l:"📚 Aprendizajes",sec:null},
+    {id:"admin",l:"⚙️ Admin",sec:null,adminOnly:true},
+  ].filter(t=>(!t.adminOnly||user?.role==="admin")&&(!t.sec||canAccess(t.sec)));
 
+  /* ── LOADING ── */
+  if(screen==="loading")return(<div style={{background:P.bg,minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:20}}><style>{CSS}</style><div className="pulse" style={{fontFamily:"'Poppins',sans-serif",fontSize:36,fontWeight:800}}><GT>BITÁCORA PRO</GT></div><div style={{display:"flex",gap:6}}>{[0,1,2].map(i=><div key={i} style={{width:5,height:5,borderRadius:"50%",background:P.gold,animation:"pulse 1.4s ease-in-out "+(i*0.2)+"s infinite"}}/>)}</div></div>);
 
+  /* ── AUTH ── */
+  if(screen==="auth")return(
+    <div style={{background:P.bg,minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+      <style>{CSS}</style>
+      <div style={{width:"100%",maxWidth:400}} className="anim">
+        <div style={{textAlign:"center",marginBottom:36}}>
+          <div style={{fontSize:9,color:P.mt2,letterSpacing:5,textTransform:"uppercase",marginBottom:10,fontWeight:300}}>estefani horta</div>
+          <h1 style={{fontFamily:"'Poppins',sans-serif",fontSize:48,fontWeight:800,lineHeight:1,margin:0}}><GT>BITÁCORA</GT></h1>
+          <h1 style={{fontFamily:"'Poppins',sans-serif",fontSize:48,fontWeight:300,lineHeight:1,color:P.tx,margin:0}}>PRO</h1>
+        </div>
+        <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:16,padding:28}}>
+          <div style={{display:"flex",flexDirection:"column",gap:14}}>
+            <div><div style={{fontSize:9,letterSpacing:2,color:P.mt,marginBottom:6,textTransform:"uppercase",fontWeight:600}}>Usuario</div><input style={SI()} value={uname} onChange={e=>setUname(e.target.value)} placeholder="tu_usuario" onKeyDown={e=>e.key==="Enter"&&doAuth()} autoCapitalize="none"/></div>
+            <div><div style={{fontSize:9,letterSpacing:2,color:P.mt,marginBottom:6,textTransform:"uppercase",fontWeight:600}}>Contraseña</div><input style={SI()} type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="••••••••" onKeyDown={e=>e.key==="Enter"&&doAuth()}/></div>
+            {err&&<div style={{background:"#1e0808",border:"1px solid #5a181844",borderRadius:8,padding:"10px 14px",color:"#f08888",fontSize:12}}>{err}</div>}
+            <button style={SB({width:"100%",padding:"13px 0",fontSize:12,marginTop:4})} onClick={doAuth} disabled={busy}>{busy?<span className="pulse">▪ ▪ ▪</span>:isReg?"CREAR CUENTA":"ENTRAR"}</button>
+          </div>
+          <div style={{textAlign:"center",marginTop:18,fontSize:12,color:P.mt}}>{isReg?"¿Ya tienes cuenta? ":"¿Primera vez? "}<span style={{color:P.gold,cursor:"pointer",fontWeight:600}} onClick={()=>{setIsReg(!isReg);setErr("");}}>{isReg?"Inicia sesión":"Regístrate"}</span></div>
+        </div>
+      </div>
+    </div>
+  );
+
+  /* ════════ APP ════════ */
 
   useEffect(()=>{
     const r=()=>setIsMob(window.innerWidth<768);
     window.addEventListener("resize",r);
     return()=>window.removeEventListener("resize",r);
   },[]);
-
   useEffect(()=>{
     (async()=>{
       try{
@@ -636,6 +1287,9 @@ export default function App(){
             setNoteText(await DB.get("floatnote:"+sess.u)||"");
             const m4s=await DB.get("m4s:"+sess.u)||{};setSavedR(m4s);
             if(ud.role==="admin"){const all=await DB.get("admin:usuarios")||[];setUsuarios(all);}
+            const today=todayStr();
+            setDate(today);setDay(await DB.get("d:"+sess.u+":"+today)||null);
+            setFontSize(ud.fontSize||14);
             setScreen("app");return;
           }
         }
@@ -644,7 +1298,6 @@ export default function App(){
       setScreen("auth");
     })();
   },[]);
-
   const doAuth=async()=>{
     setBusy(true);setErr("");
     const u=uname.trim().toLowerCase().replace(/[\s/\'"+]+/g,"_");
@@ -655,11 +1308,12 @@ export default function App(){
       const ex=await DB.get("u:"+u);
       if(ex){setErr("Usuario ya existe");setBusy(false);return;}
       const nc=(nombre.trim()+" "+apellido.trim()).trim();
-      const ud={ph:hash(pass),role:"admin",active:true,nc};
+      const ud={ph:hash(pass),role:"admin",active:true,nc,fontSize:14};
       await DB.set("u:"+u,ud);
       await DB.set("session:active",{u,ph:hash(pass)});
       await DB.set("session:lastuser",{u});
       setUser({name:u,ph:hash(pass),role:"admin",nc});
+      const today=todayStr();setDate(today);setDay(null);
       setScreen("app");
     }else{
       const ud=await DB.get("u:"+u);
@@ -677,34 +1331,36 @@ export default function App(){
       setNoteText(await DB.get("floatnote:"+u)||"");
       const m4s=await DB.get("m4s:"+u)||{};setSavedR(m4s);
       if(ud.role==="admin"){const all=await DB.get("admin:usuarios")||[];setUsuarios(all);}
+      const today=todayStr();setDate(today);
+      setDay(await DB.get("d:"+u+":"+today)||null);
+      setFontSize(ud.fontSize||14);
       setScreen("app");
     }
     setBusy(false);
   };
-
   const logout=async()=>{
+    if(day)await DB.set("d:"+(user&&user.name)+":"+date,day);
     await DB.set("session:active",null);
     setUser(null);setScreen("auth");setUname("");setPass("");setNombre("");setApellido("");setMenuOpen(false);
   };
-
   const doSave=async(silent=false)=>{
     if(!silent)setSaveMsg("guardando...");
     if(user){
+      if(day)await DB.set("d:"+user.name+":"+date,day);
+      await DB.set("floatnote:"+user.name,noteText);
+      const ud=await DB.get("u:"+user.name)||{};
+      await DB.set("u:"+user.name,{...ud,fontSize});
       await DB.set("productos:"+user.name,productos);
       await DB.set("camps:"+user.name,camps);
       await DB.set("tiendas:"+user.name,tiendas);
       await DB.set("gastos:"+user.name,gastos);
       await DB.set("aprend:"+user.name,aprend);
-      await DB.set("floatnote:"+user.name,noteText);
       await DB.set("m4s:"+user.name,savedR);
     }
     if(!silent){setSaveMsg("Guardado");setTimeout(()=>setSaveMsg(""),2000);}
   };
-
   const fn=user&&user.nc?user.nc:(user&&user.name?user.name:"");
   const firstName=fn.split(" ")[0]||fn;
-
-
   const MODS=[
     {id:"planner",icon:"📋",label:"Planner",desc:"Planificacion diaria",color:P.gold},
     {id:"productos",icon:"📦",label:"Productos",desc:"Pipeline de productos",color:P.blue},
@@ -712,9 +1368,7 @@ export default function App(){
     {id:"creativos",icon:"🎨",label:"Creativos",desc:"Prompts y guiones",color:P.purple},
     {id:"metricas",icon:"📈",label:"Metricas",desc:"Salud del negocio",color:P.orange},
   ];
-
   if(screen==="loading")return(<div style={{background:P.bg,minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:20}}><style>{CSS}</style><div style={{fontFamily:"'Poppins',sans-serif",fontSize:32,fontWeight:800,lineHeight:1}}><GT>BITACORA PRO</GT></div><div style={{fontSize:9,color:P.mt2,letterSpacing:4,textTransform:"uppercase",marginTop:6,fontWeight:300}}>by Estefani Horta</div><div style={{display:"flex",gap:6,marginTop:12}}>{[0,1,2].map(i=><div key={i} style={{width:6,height:6,borderRadius:"50%",background:P.gold,animation:"pulse 1.4s ease-in-out "+(i*0.2)+"s infinite"}}/>)}</div></div>);
-
   if(screen==="auth")return(
     <div style={{background:P.bg,minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",padding:"20px",position:"relative",overflow:"hidden"}}>
       <style>{CSS}</style>
@@ -820,8 +1474,8 @@ export default function App(){
           </div>
         </div>
       )}
-
       {modulo==="planner"&&(
+
       {/* BG */}
       <div style={{position:"fixed",inset:0,pointerEvents:"none",overflow:"hidden",zIndex:0}}>
         <div style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:"100%",height:1,background:"linear-gradient(90deg,transparent,"+(P.gold)+"33,transparent)"}}/>
@@ -1066,15 +1720,7 @@ export default function App(){
       </div>
 
       )}
-
       {modulo==="productos"&&(
-      <div style={{background:"#060604",borderBottom:"1px solid "+P.border,padding:isMob?"8px 14px":"10px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8,position:"sticky",top:0,zIndex:100}}>
-        <div style={{fontFamily:"'Poppins',sans-serif",fontSize:isMob?16:22,fontWeight:800}}><GT>BITÁCORA PRO</GT></div>
-        <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
-          <span style={{fontSize:11,color:P.mt}}>@{user?.name}</span>
-          <button style={SB({padding:"7px 16px",fontSize:11})} onClick={()=>doSave()}>{saveMsg||"GUARDAR"}</button>
-          <button style={SG({padding:"5px 12px",fontSize:11})} onClick={logout}>Salir</button>
-        </div>
       </div>
 
       <div style={{padding:isMob?"12px":"20px",maxWidth:1200,margin:"0 auto"}} className="anim">
@@ -1187,8 +1833,8 @@ export default function App(){
         </div>
       )}
       )}
-
       {modulo==="trafficker"&&(
+
       {/* HEADER */}
       <div style={{background:"#060604",borderBottom:"1px solid "+P.border,padding:isMob?"8px 14px":"10px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8,position:"sticky",top:0,zIndex:100}}>
         <div style={{display:"flex",alignItems:"center",gap:10}}>
@@ -1649,17 +2295,7 @@ export default function App(){
         </div>
       )}
       )}
-
       {modulo==="creativos"&&(
-      <div style={{background:"#060604",borderBottom:"1px solid "+P.border,padding:isMob?"8px 14px":"10px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8,position:"sticky",top:0,zIndex:100}}>
-        <div style={{display:"flex",alignItems:"center",gap:10}}><div style={{fontFamily:"'Poppins',sans-serif",fontSize:isMob?15:20,fontWeight:800}}><GT>BITÁCORA PRO</GT></div><span style={{color:P.mt2}}>|</span><span style={{fontSize:11,color:P.mt}}>🎨 Creativos & Contenido</span></div>
-        <div style={{display:"flex",gap:8,alignItems:"center"}}><button style={SB({padding:"7px 16px",fontSize:11})} onClick={()=>doSave()}>{saveMsg||"GUARDAR"}</button><button style={SG({padding:"5px 12px",fontSize:11})} onClick={logout}>Salir</button></div>
-      </div>
-      <div style={{display:"flex",background:"#060604",borderBottom:"1px solid "+P.border,overflowX:"auto",position:"sticky",top:isMob?53:57,zIndex:99}}>
-        {[{id:"landing",l:"🖥️ Landing"},{id:"productpage",l:"🛍️ Product Page"},{id:"creativos",l:"🎬 Creativos"},{id:"miniaturas",l:"🖼️ Miniaturas"},{id:"analisis",l:"🔍 Análisis"}].map(({id,l})=>(
-          <button key={id} onClick={()=>setTab(id)} style={{background:"none",border:"none",borderBottom:tab===id?"2px solid "+(P.gold):"2px solid transparent",color:tab===id?P.gold:P.mt,padding:isMob?"8px 10px":"10px 20px",fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:isMob?9:10,letterSpacing:.8,textTransform:"uppercase",whiteSpace:"nowrap",transition:"all .2s"}}>{l}</button>
-        ))}
-      </div>
       <div style={{padding:isMob?"12px":"20px",maxWidth:1100,margin:"0 auto"}}>
 
         {/* SELECTOR PRODUCTO */}
@@ -1781,8 +2417,8 @@ export default function App(){
         </div>)}
       </div>
       )}
-
       {modulo==="metricas"&&(
+
       {/* HEADER */}
       <div style={{background:"#060604",borderBottom:"1px solid "+P.border,padding:isMob?"8px 14px":"10px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8,position:"sticky",top:0,zIndex:100}}>
         <div style={{display:"flex",alignItems:"center",gap:10}}>
@@ -2260,6 +2896,7 @@ export default function App(){
           style={{width:46,height:46,borderRadius:"50%",background:"linear-gradient(135deg,"+P.gold+","+P.gold3+")",border:"none",fontSize:18,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 16px "+P.gold+"44",cursor:"pointer",transition:"transform .2s"}}
           onMouseEnter={e=>e.currentTarget.style.transform="scale(1.1)"}
           onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}>📝</button>
+      </div>
 
       {/* Calculadora flotante */}
       <div style={{position:"fixed",bottom:20,right:20,zIndex:300,display:"flex",flexDirection:"column",alignItems:"flex-end",gap:10}}>
@@ -2290,9 +2927,7 @@ export default function App(){
           onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}>🧮</button>
       </div>
 
-    </div>
       )}
-
       <div style={{position:"fixed",bottom:76,right:20,zIndex:300,display:"flex",flexDirection:"column",alignItems:"flex-end",gap:8}}>
         {calcOpen&&(<div style={{background:P.card,border:"1px solid "+P.borderG,borderRadius:14,padding:14,width:isMob?280:310,boxShadow:"0 8px 32px #00000066",maxHeight:"78vh",overflowY:"auto"}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
@@ -2301,13 +2936,10 @@ export default function App(){
           </div>
           {(()=>{const r=calcCosteo(calcV);const F=COP;
             const flds=[["Pais","pais","sel",["Colombia","Mexico","Ecuador","Espana","Chile","Peru"]],["Prec.Prov","precProv","num"],["P.Venta","pvManual","num"],["Efectiv","efectividad","num"],["% CPA","pctCpa","num"],["Gasto adm","costoAdmin","num"]];
-            return(<>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:8}}>
-                {flds.map(([lbl,key,tp,opts])=>(<div key={key}>
-                  <div style={{fontSize:8,color:P.mt,textTransform:"uppercase",fontWeight:600,marginBottom:2}}>{lbl}</div>
+            return(<><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:8}}>
+                {flds.map(([lbl,key,tp,opts])=>(<div key={key}><div style={{fontSize:8,color:P.mt,textTransform:"uppercase",fontWeight:600,marginBottom:2}}>{lbl}</div>
                   {tp==="sel"?<select style={SI({fontSize:10,padding:"4px 6px"})} value={calcV[key]||""} onChange={e=>setCalcV({...calcV,[key]:e.target.value})}>{(opts||[]).map(o=><option key={o}>{o}</option>)}</select>
-                  :<input type="number" style={SI({fontSize:10,padding:"4px 6px"})} value={calcV[key]||""} onChange={e=>setCalcV({...calcV,[key]:e.target.value})}/>}
-                </div>))}
+                  :<input type="number" style={SI({fontSize:10,padding:"4px 6px"})} value={calcV[key]||""} onChange={e=>setCalcV({...calcV,[key]:e.target.value})}/>}</div>))}
               </div>
               <div style={{background:P.bg2,borderRadius:8,padding:"8px 10px",border:"1px solid "+P.border,marginBottom:6}}>
                 {[["Prov",r.prec],["Flete",r.fleteD],["CPA",r.cpa],["Total",r.total]].map(([l,v])=>(<div key={l} style={{display:"flex",justifyContent:"space-between",padding:"3px 0",borderBottom:"1px solid "+P.border}}><span style={{fontSize:10,color:P.mt}}>{l}</span><span style={{fontSize:10,color:l==="Total"?P.gold:P.mt,fontWeight:l==="Total"?700:400}}>{F(v)}</span></div>))}
@@ -2317,8 +2949,7 @@ export default function App(){
               </div>
               <div style={{background:P.bg2,borderRadius:8,padding:"8px 10px",border:"1px solid "+P.border}}>
                 {[["x2",r.pv2,r.util2],["x3",r.pv3,r.util3]].map(([l,pv,ut])=>(<div key={l} style={{display:"flex",justifyContent:"space-between",padding:"3px 0",borderBottom:"1px solid "+P.border}}><span style={{fontSize:10,color:P.mt}}>{l} {F(pv)}</span><span style={{fontSize:10,color:ut>=0?P.green:P.red,fontWeight:600}}>{F(ut)}</span></div>))}
-              </div>
-            </>);
+              </div></>);
           })()}
         </div>)}
         <button onClick={()=>setCalcOpen(!calcOpen)} style={{width:46,height:46,borderRadius:"50%",background:"linear-gradient(135deg,"+P.gold+","+P.gold3+")",border:"none",fontSize:18,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 16px "+P.gold+"44",cursor:"pointer"}}>🧮</button>
