@@ -1488,7 +1488,7 @@ export default function App(){
             <GoldText>BITÁCORA PRO</GoldText>
           </div>
           <span style={{color:P.mt2,fontSize:12}}>|</span>
-          <span style={{fontSize:11,color:P.mt,fontWeight:400}}>@{user?.name}</span>
+          <span style={{fontSize:11,color:P.mt,fontWeight:400}}>{"@"+(user?.name||"")}</span>
           {user?.role==="admin"&&<span style={{background:P.gold+"22",border:"1px solid "+P.gold+"44",borderRadius:12,padding:"1px 7px",fontSize:9,color:P.gold,letterSpacing:1,fontWeight:600}}>ADMIN</span>}
         </div>
         <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
@@ -2739,7 +2739,7 @@ export default function App(){
                 {usuarios.map(u=>(
                   <div key={u.name} className="hr" style={{padding:"14px 18px",borderBottom:"1px solid "+P.border}}>
                     <div style={{display:"flex",alignItems:"center",gap:12,flexWrap:"wrap",marginBottom:8}}>
-                      <div style={{fontFamily:"'Poppins',sans-serif",fontSize:13,fontWeight:700,color:P.tx,flex:1}}>@{u.name}</div>
+                      <div style={{fontFamily:"'Poppins',sans-serif",fontSize:13,fontWeight:700,color:P.tx,flex:1}}>{"@"+(u.name||"")}</div>
                       <span style={{background:(u.role==="admin"?P.gold:P.blue)+"22",border:"1px solid "+(u.role==="admin"?P.gold:P.blue)+"44",borderRadius:12,padding:"2px 8px",fontSize:10,color:u.role==="admin"?P.gold:P.blue,fontWeight:600}}>{u.role}</span>
                       {/* Toggle activo */}
                       <div style={{display:"flex",alignItems:"center",gap:8}}>
