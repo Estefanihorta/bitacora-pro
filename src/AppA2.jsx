@@ -35,8 +35,8 @@ button{cursor:pointer}
 `;
 
 const DB={
-  get:async k=>{try{const r=await window.storage.get(k,true);return r?JSON.parse(r.value):null;}catch{return null;}},
-  set:async(k,v)=>{try{await window.storage.set(k,JSON.stringify(v),true);}catch{}}
+  get:async k=>{try{const r=localStorage.getItem(k);return r?JSON.parse(r):null;}catch{return null;}},
+  set:async(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
 };
 
 const SI=(x={})=>({background:"#0f0f0c",border:"1px solid #2a2a22",borderRadius:8,padding:"9px 13px",color:"#F0EDE6",fontSize:13,fontFamily:"'Poppins',sans-serif",width:"100%",transition:"border-color .2s",...x});
