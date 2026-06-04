@@ -426,6 +426,7 @@ export default function App(){
 
   /* derived — always computed */
   const prod=useMemo(()=>productos.find(p=>p.id===selProd)||null,[productos,selProd]);
+  const prodCreativo=fuenteProd==="analizado"?(productos.find(p=>p.id===prodSelId)||productos[0]):prodLibre;
   const prodsFiltrados=useMemo(()=>{
     let r=[...productos];
     if(search)r=r.filter(p=>p.nombre.toLowerCase().includes(search.toLowerCase()));
@@ -821,9 +822,6 @@ export default function App(){
       )}
 
       {modulo==="planner"&&(
-    <div style={{fontFamily:"'Poppins',sans-serif",background:P.bg,minHeight:"100vh",color:P.tx,fontSize:fontSize}}>
-      <style>{CSS}</style>
-
       {/* BG */}
       <div style={{position:"fixed",inset:0,pointerEvents:"none",overflow:"hidden",zIndex:0}}>
         <div style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:"100%",height:1,background:"linear-gradient(90deg,transparent,"+(P.gold)+"33,transparent)"}}/>
@@ -1067,12 +1065,9 @@ export default function App(){
           onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}>🧮</button>
       </div>
 
-    </div>
       )}
 
       {modulo==="productos"&&(
-    <div style={{fontFamily:"'Poppins',sans-serif",background:P.bg,minHeight:"100vh",color:P.tx}}>
-      <style>{CSS}</style>
       <div style={{background:"#060604",borderBottom:"1px solid "+P.border,padding:isMob?"8px 14px":"10px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8,position:"sticky",top:0,zIndex:100}}>
         <div style={{fontFamily:"'Poppins',sans-serif",fontSize:isMob?16:22,fontWeight:800}}><GT>BITÁCORA PRO</GT></div>
         <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
@@ -1191,13 +1186,9 @@ export default function App(){
           </div>
         </div>
       )}
-    </div>
       )}
 
       {modulo==="trafficker"&&(
-    <div style={{fontFamily:"'Poppins',sans-serif",background:P.bg,minHeight:"100vh",color:P.tx}}>
-      <style>{CSS}</style>
-
       {/* HEADER */}
       <div style={{background:"#060604",borderBottom:"1px solid "+P.border,padding:isMob?"8px 14px":"10px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8,position:"sticky",top:0,zIndex:100}}>
         <div style={{display:"flex",alignItems:"center",gap:10}}>
@@ -1657,12 +1648,9 @@ export default function App(){
           </div>
         </div>
       )}
-    </div>
       )}
 
       {modulo==="creativos"&&(
-    <div style={{fontFamily:"'Poppins',sans-serif",background:P.bg,minHeight:"100vh",color:P.tx}}>
-      <style>{CSS}</style>
       <div style={{background:"#060604",borderBottom:"1px solid "+P.border,padding:isMob?"8px 14px":"10px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8,position:"sticky",top:0,zIndex:100}}>
         <div style={{display:"flex",alignItems:"center",gap:10}}><div style={{fontFamily:"'Poppins',sans-serif",fontSize:isMob?15:20,fontWeight:800}}><GT>BITÁCORA PRO</GT></div><span style={{color:P.mt2}}>|</span><span style={{fontSize:11,color:P.mt}}>🎨 Creativos & Contenido</span></div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}><button style={SB({padding:"7px 16px",fontSize:11})} onClick={()=>doSave()}>{saveMsg||"GUARDAR"}</button><button style={SG({padding:"5px 12px",fontSize:11})} onClick={logout}>Salir</button></div>
@@ -1685,7 +1673,7 @@ export default function App(){
           {fuenteProd==="analizado"?(
             <div style={{display:"grid",gridTemplateColumns:isMob?"1fr":"2fr 1fr",gap:12}}>
               <div><div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>Seleccionar producto</div><select style={SI()} value={prodSelId} onChange={e=>setProdSelId(e.target.value)}>{productos.map(p=><option key={p.id} value={p.id}>{p.nombre}</option>)}</select></div>
-              {prod&&<div style={{background:P.bg2,borderRadius:10,padding:"12px 14px",border:"1px solid "+P.border}}><div style={{fontSize:11,color:P.gold,fontWeight:700,marginBottom:4}}>{prod.nombre}</div><div style={{fontSize:10,color:P.mt,lineHeight:1.5,marginBottom:4}}>{(prod.descripcion||"").slice(0,80)}...</div><div style={{fontSize:10,color:P.mt}}>💰 {prod.precioAhora} · 🌍 {prod.pais}</div></div>}
+              {prodCreativo&&<div style={{background:P.bg2,borderRadius:10,padding:"12px 14px",border:"1px solid "+P.border}}><div style={{fontSize:11,color:P.gold,fontWeight:700,marginBottom:4}}>{prodCreativo.nombre}</div><div style={{fontSize:10,color:P.mt,lineHeight:1.5,marginBottom:4}}>{(prodCreativo.descripcion||"").slice(0,80)}...</div><div style={{fontSize:10,color:P.mt}}>💰 {prodCreativo.precioAhora} · 🌍 {prodCreativo.pais}</div></div>}
             </div>
           ):(
             <div style={{display:"grid",gridTemplateColumns:isMob?"1fr":"1fr 1fr",gap:10}}>
@@ -1703,55 +1691,55 @@ export default function App(){
         {/* ══ LANDING ══ */}
         {tab==="landing"&&(<div className="anim">
           <div style={{background:"#0a0f08",border:"1px solid "+P.green+"33",borderRadius:10,padding:"10px 14px",marginBottom:14,fontSize:11,color:P.green,lineHeight:1.6}}>💡 <b>Flujo:</b> Adjunta fotos del producto en ChatGPT → Envía el Briefing → aprueba bloque por bloque → al terminar pide el HTML completo.</div>
-          <Acc num="0A" label="Briefing Versión A — Ya tienes nombre y paleta" tag="Momento 1 · Inicio" color={P.green} defaultOpen={true} note="⚠ Adjunta las fotos del producto en este mismo mensaje antes de enviar."><PromptBox text={bLA(prod,angulos)}/><RB k="lb_a" ph="Pega aquí la confirmación de ChatGPT..."/></Acc>
-          <Acc num="0B" label="Briefing Versión B — Sin nombre ni paleta definidos" tag="Momento 1 · Inicio" color={P.green} note="La IA propone 3 nombres + decide la paleta. Tú confirmas el nombre y arrancamos con el hero."><PromptBox text={bLB(prod)}/><RB k="lb_b" ph="Pega aquí los nombres y paleta propuestos..."/></Acc>
+          <Acc num="0A" label="Briefing Versión A — Ya tienes nombre y paleta" tag="Momento 1 · Inicio" color={P.green} defaultOpen={true} note="⚠ Adjunta las fotos del producto en este mismo mensaje antes de enviar."><PromptBox text={bLA(prodCreativo,angulos)}/><RB k="lb_a" ph="Pega aquí la confirmación de ChatGPT..."/></Acc>
+          <Acc num="0B" label="Briefing Versión B — Sin nombre ni paleta definidos" tag="Momento 1 · Inicio" color={P.green} note="La IA propone 3 nombres + decide la paleta. Tú confirmas el nombre y arrancamos con el hero."><PromptBox text={bLB(prodCreativo)}/><RB k="lb_b" ph="Pega aquí los nombres y paleta propuestos..."/></Acc>
           <Acc num="1" label="Hero — imagen principal" tag="Momento 2 · Hero" color={P.gold} note="Si el hero no convence, pide variaciones antes de avanzar. Sin botón de compra.">
             <div style={{display:"flex",gap:10,marginBottom:12,flexWrap:"wrap"}}>
               <div style={{flex:1,minWidth:80}}><div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>Ancho px</div><input style={SI({fontSize:12})} value={heroAncho} onChange={e=>setHeroAncho(e.target.value)}/></div>
               <div style={{flex:1,minWidth:80}}><div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>Alto px</div><input style={SI({fontSize:12})} value={heroAlto} onChange={e=>setHeroAlto(e.target.value)}/></div>
             </div>
-            <PromptBox text={bHero(prod,heroAncho,heroAlto)}/><RB k="l_hero"/>
+            <PromptBox text={bHero(prodCreativo,heroAncho,heroAlto)}/><RB k="l_hero"/>
           </Acc>
-          <Acc num="2" label="Beneficios — 3 a 5 puntos resultado" tag="Momento 3 · Bloque" color={P.blue}><PromptBox text={bBen(prod)}/><RB k="l_ben"/></Acc>
-          <Acc num="3" label="Características — specs visuales" tag="Momento 3 · Bloque" color={P.blue}><PromptBox text={bCar(prod)}/><RB k="l_car"/></Acc>
+          <Acc num="2" label="Beneficios — 3 a 5 puntos resultado" tag="Momento 3 · Bloque" color={P.blue}><PromptBox text={bBen(prodCreativo)}/><RB k="l_ben"/></Acc>
+          <Acc num="3" label="Características — specs visuales" tag="Momento 3 · Bloque" color={P.blue}><PromptBox text={bCar(prodCreativo)}/><RB k="l_car"/></Acc>
           <Acc num="4" label="Tabla Comparativa — define contra qué comparas" tag="Momento 3 · Bloque" color={P.blue}>
             <div style={{marginBottom:10}}><div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>¿Contra qué comparas?</div><input style={SI({fontSize:12})} value={comparacion} onChange={e=>setComparacion(e.target.value)} placeholder='ej: "compara tener vs no tener el producto"'/></div>
-            <PromptBox text={bTab(prod,comparacion)}/><RB k="l_tab"/>
+            <PromptBox text={bTab(prodCreativo,comparacion)}/><RB k="l_tab"/>
           </Acc>
-          <Acc num="5" label="GIF Problema → Solución (prompt para generar)" tag="Momento 3 · GIF" color={P.orange} note="Prompt listo para ChatGPT/Sora/Runway. Duración 3-5 segundos."><PromptBox text={bGIF(prod,"problema")}/><RB k="l_gif1" ph="Pega aquí el prompt del GIF generado..."/></Acc>
-          <Acc num="6" label="GIF Modo de Uso (prompt para generar)" tag="Momento 3 · GIF" color={P.orange}><PromptBox text={bGIF(prod,"uso")}/><RB k="l_gif2" ph="Pega aquí el prompt del GIF generado..."/></Acc>
-          <Acc num="7" label="Testimonios — 3 personas reales" tag="Momento 3 · Bloque" color={P.purple}><PromptBox text={bTest(prod)}/><RB k="l_test"/></Acc>
-          <Acc num="8" label="Preguntas Frecuentes — 5 a 8 preguntas" tag="Momento 3 · Bloque" color={P.purple}><PromptBox text={bFAQ(prod)}/><RB k="l_faq"/></Acc>
-          <Acc num="9" label="Reseñas Trustoo — 20 reseñas (17×⭐⭐⭐⭐⭐ + 3×⭐⭐⭐⭐)" tag="Momento 3 · Reseñas" color={P.gold} note="★ Las 3 reseñas de 4 estrellas: SIEMPRE critican la transportadora, NUNCA el producto. Fotos hiperrealistas, NO piel lisa."><PromptBox text={bTrustoo(prod)}/><RB k="l_trustoo" ph="Pega aquí las reseñas generadas..." h={160}/></Acc>
+          <Acc num="5" label="GIF Problema → Solución (prompt para generar)" tag="Momento 3 · GIF" color={P.orange} note="Prompt listo para ChatGPT/Sora/Runway. Duración 3-5 segundos."><PromptBox text={bGIF(prodCreativo,"problema")}/><RB k="l_gif1" ph="Pega aquí el prompt del GIF generado..."/></Acc>
+          <Acc num="6" label="GIF Modo de Uso (prompt para generar)" tag="Momento 3 · GIF" color={P.orange}><PromptBox text={bGIF(prodCreativo,"uso")}/><RB k="l_gif2" ph="Pega aquí el prompt del GIF generado..."/></Acc>
+          <Acc num="7" label="Testimonios — 3 personas reales" tag="Momento 3 · Bloque" color={P.purple}><PromptBox text={bTest(prodCreativo)}/><RB k="l_test"/></Acc>
+          <Acc num="8" label="Preguntas Frecuentes — 5 a 8 preguntas" tag="Momento 3 · Bloque" color={P.purple}><PromptBox text={bFAQ(prodCreativo)}/><RB k="l_faq"/></Acc>
+          <Acc num="9" label="Reseñas Trustoo — 20 reseñas (17×⭐⭐⭐⭐⭐ + 3×⭐⭐⭐⭐)" tag="Momento 3 · Reseñas" color={P.gold} note="★ Las 3 reseñas de 4 estrellas: SIEMPRE critican la transportadora, NUNCA el producto. Fotos hiperrealistas, NO piel lisa."><PromptBox text={bTrustoo(prodCreativo)}/><RB k="l_trustoo" ph="Pega aquí las reseñas generadas..." h={160}/></Acc>
         </div>)}
 
         {/* ══ PRODUCT PAGE ══ */}
         {tab==="productpage"&&(<div className="anim">
           <div style={{background:"#0a0a14",border:"1px solid "+P.blue+"33",borderRadius:10,padding:"10px 14px",marginBottom:14,fontSize:11,color:P.blue,lineHeight:1.6}}>💡 <b>Flujo:</b> Adjunta fotos → Briefing → cada slide por separado → copy de texto → eBook de regalo.</div>
-          <Acc num="0" label="Briefing Product Page" tag="Inicio" color={P.blue} defaultOpen={true} note="⚠ Adjunta las fotos del producto en este mismo mensaje."><PromptBox text={bPPBrief(prod)}/><RB k="pp_br" ph="Pega aquí la confirmación..."/></Acc>
+          <Acc num="0" label="Briefing Product Page" tag="Inicio" color={P.blue} defaultOpen={true} note="⚠ Adjunta las fotos del producto en este mismo mensaje."><PromptBox text={bPPBrief(prodCreativo)}/><RB k="pp_br" ph="Pega aquí la confirmación..."/></Acc>
           <div style={{fontSize:10,color:P.gold,letterSpacing:1.5,textTransform:"uppercase",fontWeight:600,margin:"16px 0 8px",paddingLeft:4}}>📸 Slides — Imágenes 1080×1080</div>
-          <Acc num="1" label="Slide 1 — Fondo Blanco (producto limpio)" tag="Imagen" color={P.mt}><PromptBox text={bSlide(prod,1,"Fondo Blanco","- Fondo: blanco puro\n- Producto al centro, limpio, bien iluminado, fiel a las fotos reales\n- Sin texto. Solo el producto.\n- Premium, que inspire confianza de marca")}/><RB k="pp_s1"/></Acc>
-          <Acc num="2" label="Slide 2 — Imagen Principal (BOTÓN DE COMPRA AQUÍ)" tag="Imagen · ⚠ PRIMER SLIDE" color={P.gold} note="⚠ Este slide va PRIMERO en el carrusel. Debe tener el botón de compra visible."><PromptBox text={bSlide(prod,2,"Imagen Principal","- Producto como protagonista (foto real)\n- Texto del punto de dolor: \""+(prod.problema||"[problema]")+"\"\n- Beneficio principal del producto\n- Precio: "+(prod.precioAhora||"[precio]")+" COP\n- BOTÓN DE COMPRA visible en la imagen\n- Hiperrealista, NO stock. Problema + solución en 2 segundos")}/><RB k="pp_s2"/></Acc>
-          <Acc num="3" label="Slide 3 — Características" tag="Imagen" color={P.blue}><PromptBox text={bSlide(prod,3,"Características","- Lista las 4-6 specs más importantes visualmente\n- Producto presente en la imagen\n- Íconos simples + texto corto por especificación\n- Técnico pero limpio, legible en móvil")}/><RB k="pp_s3"/></Acc>
-          <Acc num="4" label="Slide 4 — Beneficio Clave" tag="Imagen" color={P.blue}><PromptBox text={bSlide(prod,4,"Beneficio Clave","- UN solo beneficio — el más diferenciador\n- Persona usando el producto o resultado (hiperrealista, NO piel lisa)\n- Frase máx 8 palabras que refuerce el beneficio\n- Genera DESEO de tener el producto")}/><RB k="pp_s4"/></Acc>
-          <Acc num="5" label="Slide 5 — Modo de Uso" tag="Imagen" color={P.blue}><PromptBox text={bSlide(prod,5,"Modo de Uso","- Máximo 3 pasos numerados\n- Manos usando el producto — hiperrealista, cotidiano\n- El cliente entiende en 5 segundos cómo funciona")}/><RB k="pp_s5"/></Acc>
-          <Acc num="6" label="Slide 6 — Tabla Comparativa" tag="Imagen" color={P.blue}><PromptBox text={bSlide(prod,6,"Tabla Comparativa","- "+(prod.nombre)+" vs otras opciones del mercado\n- Máximo 5 comparaciones de 2 palabras\n- ✓ para nuestro producto, ✗ para la competencia\n- Diseño limpio, legible en móvil")}/><RB k="pp_s6"/></Acc>
-          <Acc num="7" label="Slide 7 — Reseñas (fotos hiperrealistas humanas)" tag="Imagen" color={P.purple} note="Fotos: persona real, NO modelo, NO piel lisa, imagen casera del día a día."><PromptBox text={bSlide(prod,7,"Reseñas","- 3 reseñas con foto hiperrealista\n- Persona real, NO modelo, NO piel lisa, imagen casera\n- Nombre y apellido colombiano\n- 2-3 líneas mencionando el problema resuelto\n- Estrellas: 5 ⭐")}/><RB k="pp_s7"/></Acc>
+          <Acc num="1" label="Slide 1 — Fondo Blanco (producto limpio)" tag="Imagen" color={P.mt}><PromptBox text={bSlide(prodCreativo,1,"Fondo Blanco","- Fondo: blanco puro\n- Producto al centro, limpio, bien iluminado, fiel a las fotos reales\n- Sin texto. Solo el producto.\n- Premium, que inspire confianza de marca")}/><RB k="pp_s1"/></Acc>
+          <Acc num="2" label="Slide 2 — Imagen Principal (BOTÓN DE COMPRA AQUÍ)" tag="Imagen · ⚠ PRIMER SLIDE" color={P.gold} note="⚠ Este slide va PRIMERO en el carrusel. Debe tener el botón de compra visible."><PromptBox text={bSlide(prodCreativo,2,"Imagen Principal","- Producto como protagonista (foto real)\n- Texto del punto de dolor: \""+(prodCreativo.problema||"[problema]")+"\"\n- Beneficio principal del producto\n- Precio: "+(prodCreativo.precioAhora||"[precio]")+" COP\n- BOTÓN DE COMPRA visible en la imagen\n- Hiperrealista, NO stock. Problema + solución en 2 segundos")}/><RB k="pp_s2"/></Acc>
+          <Acc num="3" label="Slide 3 — Características" tag="Imagen" color={P.blue}><PromptBox text={bSlide(prodCreativo,3,"Características","- Lista las 4-6 specs más importantes visualmente\n- Producto presente en la imagen\n- Íconos simples + texto corto por especificación\n- Técnico pero limpio, legible en móvil")}/><RB k="pp_s3"/></Acc>
+          <Acc num="4" label="Slide 4 — Beneficio Clave" tag="Imagen" color={P.blue}><PromptBox text={bSlide(prodCreativo,4,"Beneficio Clave","- UN solo beneficio — el más diferenciador\n- Persona usando el producto o resultado (hiperrealista, NO piel lisa)\n- Frase máx 8 palabras que refuerce el beneficio\n- Genera DESEO de tener el producto")}/><RB k="pp_s4"/></Acc>
+          <Acc num="5" label="Slide 5 — Modo de Uso" tag="Imagen" color={P.blue}><PromptBox text={bSlide(prodCreativo,5,"Modo de Uso","- Máximo 3 pasos numerados\n- Manos usando el producto — hiperrealista, cotidiano\n- El cliente entiende en 5 segundos cómo funciona")}/><RB k="pp_s5"/></Acc>
+          <Acc num="6" label="Slide 6 — Tabla Comparativa" tag="Imagen" color={P.blue}><PromptBox text={bSlide(prodCreativo,6,"Tabla Comparativa","- "+(prodCreativo.nombre)+" vs otras opciones del mercado\n- Máximo 5 comparaciones de 2 palabras\n- ✓ para nuestro producto, ✗ para la competencia\n- Diseño limpio, legible en móvil")}/><RB k="pp_s6"/></Acc>
+          <Acc num="7" label="Slide 7 — Reseñas (fotos hiperrealistas humanas)" tag="Imagen" color={P.purple} note="Fotos: persona real, NO modelo, NO piel lisa, imagen casera del día a día."><PromptBox text={bSlide(prodCreativo,7,"Reseñas","- 3 reseñas con foto hiperrealista\n- Persona real, NO modelo, NO piel lisa, imagen casera\n- Nombre y apellido colombiano\n- 2-3 líneas mencionando el problema resuelto\n- Estrellas: 5 ⭐")}/><RB k="pp_s7"/></Acc>
           <div style={{fontSize:10,color:P.gold,letterSpacing:1.5,textTransform:"uppercase",fontWeight:600,margin:"16px 0 8px",paddingLeft:4}}>✍️ Copy — Secciones de Texto</div>
-          <Acc num="A" label="Nombre del Producto — [Nombre]® + necesidad + tiempo" tag="Copy" color={P.gold}><PromptBox text={bPPNombre(prod)}/><RB k="pp_nom"/></Acc>
-          <Acc num="B" label="3 Títulos — dolor / urgencia / validación social" tag="Copy" color={P.orange}><PromptBox text={bPPTitulos(prod)}/><RB k="pp_tit"/></Acc>
-          <Acc num="C" label="Beneficios con Porcentajes (97%/98%/96%)" tag="Copy" color={P.green}><PromptBox text={bPPBenPct(prod)}/><RB k="pp_bpct"/></Acc>
-          <Acc num="D" label="Tabla Comparativa — hasta 10 comparaciones" tag="Copy" color={P.blue}><PromptBox text={bPPTabla(prod)}/><RB k="pp_tab"/></Acc>
-          <Acc num="E" label="Afirmaciones, ¿Sabías que...? y Datos Curiosos" tag="Copy" color={P.orange}><PromptBox text={bPPAfirm(prod)}/><RB k="pp_afm"/></Acc>
-          <Acc num="F" label="40 Reseñas Colombianizadas" tag="Copy" color={P.purple} note="32×⭐⭐⭐⭐⭐ + 5×⭐⭐⭐⭐ (queja transportadora) + 3×⭐⭐⭐. Solo nombre y apellido. Fotos hiperrealistas, caseras, NO piel lisa."><PromptBox text={bPPRes(prod)}/><RB k="pp_res" h={160}/></Acc>
-          <Acc num="G" label="eBook de Regalo — generación completa" tag="Bonus" color={P.green} note="Se entrega junto con el producto. Al final di 'ESO FUE TODO' para recibir el HTML."><PromptBox text={bPPEbook(prod)}/><RB k="pp_ebook"/></Acc>
+          <Acc num="A" label="Nombre del Producto — [Nombre]® + necesidad + tiempo" tag="Copy" color={P.gold}><PromptBox text={bPPNombre(prodCreativo)}/><RB k="pp_nom"/></Acc>
+          <Acc num="B" label="3 Títulos — dolor / urgencia / validación social" tag="Copy" color={P.orange}><PromptBox text={bPPTitulos(prodCreativo)}/><RB k="pp_tit"/></Acc>
+          <Acc num="C" label="Beneficios con Porcentajes (97%/98%/96%)" tag="Copy" color={P.green}><PromptBox text={bPPBenPct(prodCreativo)}/><RB k="pp_bpct"/></Acc>
+          <Acc num="D" label="Tabla Comparativa — hasta 10 comparaciones" tag="Copy" color={P.blue}><PromptBox text={bPPTabla(prodCreativo)}/><RB k="pp_tab"/></Acc>
+          <Acc num="E" label="Afirmaciones, ¿Sabías que...? y Datos Curiosos" tag="Copy" color={P.orange}><PromptBox text={bPPAfirm(prodCreativo)}/><RB k="pp_afm"/></Acc>
+          <Acc num="F" label="40 Reseñas Colombianizadas" tag="Copy" color={P.purple} note="32×⭐⭐⭐⭐⭐ + 5×⭐⭐⭐⭐ (queja transportadora) + 3×⭐⭐⭐. Solo nombre y apellido. Fotos hiperrealistas, caseras, NO piel lisa."><PromptBox text={bPPRes(prodCreativo)}/><RB k="pp_res" h={160}/></Acc>
+          <Acc num="G" label="eBook de Regalo — generación completa" tag="Bonus" color={P.green} note="Se entrega junto con el producto. Al final di 'ESO FUE TODO' para recibir el HTML."><PromptBox text={bPPEbook(prodCreativo)}/><RB k="pp_ebook"/></Acc>
         </div>)}
 
         {/* ══ CREATIVOS ══ */}
         {tab==="creativos"&&(<div className="anim">
           <div style={{background:"#0a0a14",border:"1px solid "+P.purple+"33",borderRadius:10,padding:"10px 14px",marginBottom:14,fontSize:11,color:P.purple,lineHeight:1.6}}>💡 <b>Flujo AIDA:</b> Investiga puntos de dolor reales → propone ángulos con 5 hooks cada uno → tú eliges ángulo + hook → guión completo por fases → copy text para Meta Ads.</div>
-          <Acc num="1" label="Investigación — puntos de dolor reales antes de proponer ángulos" tag="Paso 1 · Investigar primero" color={P.blue} defaultOpen={true}><PromptBox text={bCrInvest(prod,angulos)}/><RB k="cr_inv" ph="Pega aquí los insights encontrados..."/></Acc>
-          <Acc num="2" label="Ángulos con 5 Hooks Agresivos cada uno" tag="Paso 2 · Definir ángulos" color={P.gold} note="ChatGPT pregunta si tienes ángulos existentes antes de proponer. Por cada ángulo: 5 hooks de máx 8 palabras."><PromptBox text={bCrAng(prod,angulos)}/><RB k="cr_ang" ph="Pega aquí los ángulos y hooks generados..."/></Acc>
+          <Acc num="1" label="Investigación — puntos de dolor reales antes de proponer ángulos" tag="Paso 1 · Investigar primero" color={P.blue} defaultOpen={true}><PromptBox text={bCrInvest(prodCreativo,angulos)}/><RB k="cr_inv" ph="Pega aquí los insights encontrados..."/></Acc>
+          <Acc num="2" label="Ángulos con 5 Hooks Agresivos cada uno" tag="Paso 2 · Definir ángulos" color={P.gold} note="ChatGPT pregunta si tienes ángulos existentes antes de proponer. Por cada ángulo: 5 hooks de máx 8 palabras."><PromptBox text={bCrAng(prodCreativo,angulos)}/><RB k="cr_ang" ph="Pega aquí los ángulos y hooks generados..."/></Acc>
           <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:12,padding:16,marginBottom:10}}>
             <div style={{fontSize:10,color:P.gold,letterSpacing:1.5,textTransform:"uppercase",fontWeight:600,marginBottom:12}}>Paso 3 · Selecciona el ángulo y hook para el guión</div>
             <div style={{display:"grid",gridTemplateColumns:isMob?"1fr":"1fr 1fr",gap:10}}>
@@ -1759,15 +1747,15 @@ export default function App(){
               <div><div style={{fontSize:9,color:P.mt,marginBottom:4,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>Hook elegido (cópialo aquí)</div><input style={SI({fontSize:12})} value={hookSel} onChange={e=>setHookSel(e.target.value)} placeholder="ej: ¿Cuánto más vas a esperar para...?"/></div>
             </div>
           </div>
-          <Acc num="3A" label="Guión UGC completo — AIDA por fases" tag="Paso 3A · UGC" color={P.purple} note="Método AIDA: Atención → Interés → Deseo → Acción. Texto de pantalla NO repite la voz. Escenas cinematográficas específicas. ElevenLabs v3 al final."><PromptBox text={bGuionUGC(prod,hookSel,angSel)}/><RB k="cr_ugc" ph="Pega aquí el guión UGC generado..." h={160}/></Acc>
-          <Acc num="3B" label="Guión Voz en Off + Imágenes/Clips — AIDA por fases" tag="Paso 3B · Voz en off" color={P.purple} note="Mismo método AIDA. Texto de pantalla complementa, no repite. ElevenLabs v3 al final."><PromptBox text={bGuionVOZ(prod,hookSel,angSel)}/><RB k="cr_voz" ph="Pega aquí el guión voz en off generado..." h={160}/></Acc>
-          <Acc num="4" label="Copy Text Meta Ads — Normal + Tipo F por ángulo" tag="Paso 4 · Copy" color={P.orange} note="Por cada ángulo: 1 copy Normal (6 líneas máx) + 1 copy Tipo F (headline + bullets + CTA). Políticas Meta Ads 2026."><PromptBox text={bCopy(prod,angulos)}/><RB k="cr_copy" ph="Pega aquí los copys generados..." h={160}/></Acc>
+          <Acc num="3A" label="Guión UGC completo — AIDA por fases" tag="Paso 3A · UGC" color={P.purple} note="Método AIDA: Atención → Interés → Deseo → Acción. Texto de pantalla NO repite la voz. Escenas cinematográficas específicas. ElevenLabs v3 al final."><PromptBox text={bGuionUGC(prodCreativo,hookSel,angSel)}/><RB k="cr_ugc" ph="Pega aquí el guión UGC generado..." h={160}/></Acc>
+          <Acc num="3B" label="Guión Voz en Off + Imágenes/Clips — AIDA por fases" tag="Paso 3B · Voz en off" color={P.purple} note="Mismo método AIDA. Texto de pantalla complementa, no repite. ElevenLabs v3 al final."><PromptBox text={bGuionVOZ(prodCreativo,hookSel,angSel)}/><RB k="cr_voz" ph="Pega aquí el guión voz en off generado..." h={160}/></Acc>
+          <Acc num="4" label="Copy Text Meta Ads — Normal + Tipo F por ángulo" tag="Paso 4 · Copy" color={P.orange} note="Por cada ángulo: 1 copy Normal (6 líneas máx) + 1 copy Tipo F (headline + bullets + CTA). Políticas Meta Ads 2026."><PromptBox text={bCopy(prodCreativo,angulos)}/><RB k="cr_copy" ph="Pega aquí los copys generados..." h={160}/></Acc>
         </div>)}
 
         {/* ══ MINIATURAS ══ */}
         {tab==="miniaturas"&&(<div className="anim">
           <div style={{background:"#140a08",border:"1px solid "+P.orange+"33",borderRadius:10,padding:"10px 14px",marginBottom:14,fontSize:11,color:P.orange,lineHeight:1.6}}>💡 <b>Flujo:</b> Briefing → ChatGPT pide los 5 ángulos → 1 miniatura por ángulo, composición diferente en cada una. Para modelos UGC: Gemini → Flow.</div>
-          <Acc num="0" label="Briefing Miniaturas — contexto del producto" tag="Inicio" color={P.orange} defaultOpen={true} note="Adjunta las fotos del producto en este mismo mensaje."><PromptBox text={bMinBrief(prod)}/><RB k="min_br" ph="Pega aquí la confirmación de ChatGPT..."/></Acc>
+          <Acc num="0" label="Briefing Miniaturas — contexto del producto" tag="Inicio" color={P.orange} defaultOpen={true} note="Adjunta las fotos del producto en este mismo mensaje."><PromptBox text={bMinBrief(prodCreativo)}/><RB k="min_br" ph="Pega aquí la confirmación de ChatGPT..."/></Acc>
           <div style={{fontSize:10,color:P.gold,letterSpacing:1.5,textTransform:"uppercase",fontWeight:600,margin:"16px 0 8px",paddingLeft:4}}>🖼️ 5 Miniaturas — 1 por ángulo, composición diferente</div>
           {[
             {n:1,c:P.red,ang:angulos.split("\n")[0]||"Ángulo 1",comp:"Close-up extremo del problema → producto en primer plano como solución"},
@@ -1777,28 +1765,24 @@ export default function App(){
             {n:5,c:P.green,ang:angulos.split("\n")[4]||"Ángulo 5",comp:"Estilo editorial premium: modelo + producto integrado + dato de validación social"},
           ].map(({n,c,ang,comp})=>(
             <Acc key={n} num={n} label={"Miniatura "+(n)+" — "+(ang)} tag={"Ángulo "+(n)+" · 1080×1920"} color={c} note={"Composición: "+(comp)}>
-              <PromptBox text={bMin(prod,n,ang,comp)}/><RB k={"min_"+(n)} ph="Pega aquí el prompt/resultado de la miniatura..."/>
+              <PromptBox text={bMin(prodCreativo,n,ang,comp)}/><RB k={"min_"+(n)} ph="Pega aquí el prompt/resultado de la miniatura..."/>
             </Acc>
           ))}
           <div style={{fontSize:10,color:P.gold,letterSpacing:1.5,textTransform:"uppercase",fontWeight:600,margin:"16px 0 8px",paddingLeft:4}}>🤖 Modelos UGC Hiperrealistas — Gemini + Flow</div>
-          <Acc num="UGC" label="Flujo completo: Gemini → Flow para modelos reales" tag="Herramienta" color={P.mt} note="Paso 1 en Gemini: analiza foto real de Pinterest → da 3 JSON prompts. Paso 2 en Flow: usa el modelo generado + fotos del producto."><PromptBox text={bUGC(prod)}/><RB k="min_ugc" ph="Pega aquí los JSON prompts generados por Gemini..."/></Acc>
+          <Acc num="UGC" label="Flujo completo: Gemini → Flow para modelos reales" tag="Herramienta" color={P.mt} note="Paso 1 en Gemini: analiza foto real de Pinterest → da 3 JSON prompts. Paso 2 en Flow: usa el modelo generado + fotos del producto."><PromptBox text={bUGC(prodCreativo)}/><RB k="min_ugc" ph="Pega aquí los JSON prompts generados por Gemini..."/></Acc>
         </div>)}
 
         {/* ══ ANÁLISIS ══ */}
         {tab==="analisis"&&(<div className="anim">
           <div style={{background:"#0a0a14",border:"1px solid "+P.blue+"33",borderRadius:10,padding:"10px 14px",marginBottom:14,fontSize:11,color:P.blue,lineHeight:1.6}}>💡 <b>Flujo:</b> Pega el prompt → ChatGPT investiga → genera análisis completo → di "ESO FUE TODO" → recibe el HTML profesional → súbelo a la ficha del producto.</div>
-          <Acc num="1" label="Análisis Profundo de Producto COD Colombia" tag="Análisis Completo" color={P.blue} defaultOpen={true} note="Score /100, ángulos, oferta, naming, buyer persona, competencia, risks. Al final genera HTML profesional."><PromptBox text={bAnalisis(prod)}/><RB k="an_an" ph="Pega aquí el análisis o el link al HTML..." h={100}/></Acc>
-          <Acc num="2" label="Competitor Analyzer — Meta Ads + Mercado Libre + Amazon" tag="Competencia" color={P.gold} note="Investiga activamente. Extrae copies textuales. Nunca inventa datos."><PromptBox text={bComp(prod)}/><RB k="an_comp" ph="Pega aquí el análisis de competencia..."/></Acc>
-          <Acc num="3" label="Analizador CRO Landing Page" tag="Optimización" color={P.red} note="Analiza en modo móvil iPhone (390px). Prioridad: 🔴 Crítico → 🟠 Alto → 🔵 Oportunidad."><PromptBox text={bCRO(prod)}/><RB k="an_cro" ph="Pega aquí el análisis CRO o el link de la landing..."/></Acc>
+          <Acc num="1" label="Análisis Profundo de Producto COD Colombia" tag="Análisis Completo" color={P.blue} defaultOpen={true} note="Score /100, ángulos, oferta, naming, buyer persona, competencia, risks. Al final genera HTML profesional."><PromptBox text={bAnalisis(prodCreativo)}/><RB k="an_an" ph="Pega aquí el análisis o el link al HTML..." h={100}/></Acc>
+          <Acc num="2" label="Competitor Analyzer — Meta Ads + Mercado Libre + Amazon" tag="Competencia" color={P.gold} note="Investiga activamente. Extrae copies textuales. Nunca inventa datos."><PromptBox text={bComp(prodCreativo)}/><RB k="an_comp" ph="Pega aquí el análisis de competencia..."/></Acc>
+          <Acc num="3" label="Analizador CRO Landing Page" tag="Optimización" color={P.red} note="Analiza en modo móvil iPhone (390px). Prioridad: 🔴 Crítico → 🟠 Alto → 🔵 Oportunidad."><PromptBox text={bCRO(prodCreativo)}/><RB k="an_cro" ph="Pega aquí el análisis CRO o el link de la landing..."/></Acc>
         </div>)}
       </div>
-    </div>
       )}
 
       {modulo==="metricas"&&(
-    <div style={{fontFamily:"'Poppins',sans-serif",background:P.bg,minHeight:"100vh",color:P.tx}}>
-      <style>{CSS}</style>
-
       {/* HEADER */}
       <div style={{background:"#060604",borderBottom:"1px solid "+P.border,padding:isMob?"8px 14px":"10px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8,position:"sticky",top:0,zIndex:100}}>
         <div style={{display:"flex",alignItems:"center",gap:10}}>
@@ -2276,7 +2260,6 @@ export default function App(){
           style={{width:46,height:46,borderRadius:"50%",background:"linear-gradient(135deg,"+P.gold+","+P.gold3+")",border:"none",fontSize:18,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 16px "+P.gold+"44",cursor:"pointer",transition:"transform .2s"}}
           onMouseEnter={e=>e.currentTarget.style.transform="scale(1.1)"}
           onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}>📝</button>
-      </div>
 
       {/* Calculadora flotante */}
       <div style={{position:"fixed",bottom:20,right:20,zIndex:300,display:"flex",flexDirection:"column",alignItems:"flex-end",gap:10}}>
