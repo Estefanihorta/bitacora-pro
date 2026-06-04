@@ -4,8 +4,8 @@ const P={bg:"#080806",bg2:"#0f0f0c",card:"#131310",card2:"#1a1a16",border:"#2a2a
 const hash=s=>{let h=5381;for(let c of s)h=(Math.imul(31,h)+c.charCodeAt(0))|0;return Math.abs(h).toString(36);};
 
 const DB={
-  get:async k=>{try{const r=await window.storage.get(k,true);return r?JSON.parse(r.value):null;}catch{return null;}},
-  set:async(k,v)=>{try{await window.storage.set(k,JSON.stringify(v),true);}catch{}}
+  get:async k=>{try{const r=localStorage.getItem(k);return r?JSON.parse(r):null;}
+  set:async(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}
 };
 
 const SI=(x={})=>({background:"#0f0f0c",border:"1px solid #2a2a22",borderRadius:8,padding:"9px 13px",color:"#F0EDE6",fontSize:13,fontFamily:"'Poppins',sans-serif",width:"100%",transition:"border-color .2s",...x});
